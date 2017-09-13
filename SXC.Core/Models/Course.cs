@@ -24,6 +24,10 @@ namespace SXC.Core.Models
 
         public string Content { get; set; }
 
+        public decimal? Price { get; set; }
+
+        public double? Period { get; set; }
+
         public int Order { get; set; }
 
         public Nullable<bool> IsValid { get; set; }

@@ -118,7 +118,7 @@ namespace UnitTestProject1
 
             img.Save(@"D:\code\Projects\速星创\server\SXC\SXC.WebApi\Images\sxclogonew1.png", ImageFormat.Png);
 
-            img.Dispose();
+            //img.Dispose();
             
         }
 

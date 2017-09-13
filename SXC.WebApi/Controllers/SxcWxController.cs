@@ -92,6 +92,32 @@ namespace SXC.WebApi.Controllers
         }
 
         /// <summary>
+        /// 获取课程明细
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Route("api/Courses/{id}")]
+        [HttpGet]
+        public IHttpActionResult GetCourses(int id)
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                var data = service.GetCourse(id);
+
+                res.resData = data;
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+
+            }
+            return Ok(res);
+        }
+
+        /// <summary>
         /// 活动信息
         /// </summary>
         /// <returns></returns>

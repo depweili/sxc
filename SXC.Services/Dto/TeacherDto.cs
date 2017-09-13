@@ -12,6 +12,8 @@ namespace SXC.Services.Dto
 
         public string name { get; set; }
 
+        public string title { get; set; }
+
         public string picurl { get; set; }
 
         public string introduction { get; set; }

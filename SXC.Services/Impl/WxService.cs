@@ -60,6 +60,7 @@ namespace SXC.Services.Impl
                     {
                         id = item.ID,
                         name = item.Name,
+                        title = item.Title,
                         picurl = GetPicUrl(item.Pic),
                         introduction = item.Introduction,
                         character = item.Character, 
@@ -85,6 +86,7 @@ namespace SXC.Services.Impl
                     {
                         id = item.ID,
                         name = item.Name,
+                        desc = item.Desc,
                         picurl = GetPicUrl(item.Pic),
                         //articleid = item.Article == null ? IntNull : item.Article.ID
                         articleid = item.ArticleID
@@ -94,6 +96,34 @@ namespace SXC.Services.Impl
                 return res;
             }
         }
+
+        public CourseDto GetCourse(int id)
+        {
+            using (var db = base.NewDB())
+            {
+                var dbitem = db.Courses.Find(id);
+
+                if (dbitem == null)
+                {
+                    return null;
+                }
+
+                var res = new CourseDto
+                    {
+                        id = dbitem.ID,
+                        name = dbitem.Name,
+                        desc = dbitem.Desc,
+                        period = dbitem.Period,
+                        price = dbitem.Price,
+                        picurl = GetPicUrl(dbitem.Pic),
+                        //articleid = item.Article == null ? IntNull : item.Article.ID
+                        articleid = dbitem.ArticleID
+                    };
+
+                return res;
+            }
+        }
+
 
         public List<PromotionDto> GetPromotions()
         {
