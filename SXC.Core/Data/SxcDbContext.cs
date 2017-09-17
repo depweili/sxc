@@ -38,6 +38,23 @@ namespace SXC.Core.Data
 
         public DbSet<Base_Area> Base_Areas { get; set; }
 
+        public DbSet<Cooperation> Cooperations { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<ReservationCourse> ReservationCourses { get; set; }
+        //public DbSet<LearnPurpose> LearnPurposes { get; set; }
+
+        public DbSet<UserIntegral> UserIntegrals { get; set; }
+        public DbSet<IntegralGrade> IntegralGrades { get; set; }
+        public DbSet<IntegralActivity> IntegralActivitys { get; set; }
+        public DbSet<IntegralRule> IntegralRules { get; set; }
+        public DbSet<IntegralRecord> IntegralRecords { get; set; }
+        public DbSet<IntegralSignIn> IntegralSignIns { get; set; }
+        public DbSet<IntegralUserActivity> IntegralUserActivitys { get; set; }
+
+
+        public DbSet<Category> Categorys { get; set; }
+        public DbSet<Commodity> Commoditys { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             string tbPrefix = ConfigHelper.GetSetting("tablePrefix");//ConfigurationManager.AppSettings["tablePrefix"];
@@ -57,6 +74,24 @@ namespace SXC.Core.Data
             modelBuilder.Configurations.Add(new UserAuthMap());
             modelBuilder.Configurations.Add(new AgentMap());
             modelBuilder.Configurations.Add(new Base_AreaMap());
+
+            modelBuilder.Configurations.Add(new CooperationMap());
+            modelBuilder.Configurations.Add(new ReservationMap());
+            modelBuilder.Configurations.Add(new ReservationCourseMap());
+            //modelBuilder.Configurations.Add(new LearnPurposeMap());
+
+            modelBuilder.Configurations.Add(new UserIntegralMap());
+            modelBuilder.Configurations.Add(new IntegralGradeMap());
+            modelBuilder.Configurations.Add(new IntegralActivityMap());
+            modelBuilder.Configurations.Add(new IntegralRuleMap());
+            modelBuilder.Configurations.Add(new IntegralRecordMap());
+            modelBuilder.Configurations.Add(new IntegralUserActivityMap());
+
+            modelBuilder.Configurations.Add(new CategoryMap());
+            modelBuilder.Configurations.Add(new CommodityMap());
+
+
+            //////////////////////////////////////////////
 
             // 禁用默认表名复数形式
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();

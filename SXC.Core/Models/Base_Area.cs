@@ -12,11 +12,13 @@ namespace SXC.Core.Models
 
         public int PID { get; set; }
 
+        public int Type { get; set; }
+
         public string Name { get; set; }
 
         public int Level { get; set; }
-
-        //public string RegionCode { get; set; }
+        
+        public string Code { get; set; }
 
         //public string ZipCode { get; set; }
 

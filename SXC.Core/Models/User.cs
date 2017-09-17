@@ -26,11 +26,15 @@ namespace SXC.Core.Models
 
         public Nullable<bool> IsValid { get; set; }
 
+        public DateTime? LastActiveTime { get; set; }
+
         public DateTime CreateTime { get; set; }
 
         public virtual UserProfile UserProfile { get; set; }
 
         public virtual Agent Agent { get; set; }
+
+        public virtual UserIntegral UserIntegral { get; set; }
     }
 
     public class UserProfile

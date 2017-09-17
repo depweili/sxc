@@ -92,6 +92,31 @@ namespace SXC.WebApi.Controllers
         }
 
         /// <summary>
+        /// 推荐课程
+        /// </summary>
+        /// <returns></returns>
+        [Route("api/Courses/Top")]
+        [HttpGet]
+        public IHttpActionResult GetCoursesTop()
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                var data = service.GetCourses(4);
+
+                res.resData = data;
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+
+            }
+            return Ok(res);
+        }
+
+        /// <summary>
         /// 获取课程明细
         /// </summary>
         /// <param name="id"></param>
@@ -198,10 +223,11 @@ namespace SXC.WebApi.Controllers
         /// <param name="code"></param>
         /// <param name="iv"></param>
         /// <param name="encryptedData"></param>
+        /// <param name="sharecode"></param>
         /// <returns></returns>
         [Route("api/WxUser")]
         [HttpGet]
-        public IHttpActionResult GetWxUser(string code, string iv, string encryptedData)
+        public IHttpActionResult GetWxUser(string code, string iv, string encryptedData, string sharecode = null)
         {
             var res = new ResponseBase();
             try
@@ -209,6 +235,8 @@ namespace SXC.WebApi.Controllers
                 WxHelper wh = new WxHelper();
 
                 dynamic wxuser = wh.GetWxUser(code, iv, encryptedData);
+
+                wxuser.sharecode = sharecode;
 
                 var service = new WxService();
                 var data = service.GetUser(wxuser);
@@ -378,7 +406,73 @@ namespace SXC.WebApi.Controllers
 
             return Ok(res);
         }
-        
+
+        /// <summary>
+        /// 合作加盟
+        /// </summary>
+        /// <param name="cooperationdto"></param>
+        /// <returns></returns>
+        [Route("api/Cooperation/Join")]
+        [HttpPost]
+        public IHttpActionResult CooperationJoin(CooperationDto cooperationdto)
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                dynamic data = service.CooperationJoin(cooperationdto);
+
+                if (!string.IsNullOrEmpty(data))
+                {
+                    res.code = "100";
+                    res.msg = data;
+                }
+
+                res.resData = null;
+                //res.resData = JsonConvert.DeserializeObject(data);
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+            }
+
+            return Ok(res);
+        }
+
+        /// <summary>
+        /// 课程预约
+        /// </summary>
+        /// <param name="reservationdto"></param>
+        /// <returns></returns>
+        [Route("api/Courses/Reservation")]
+        [HttpPost]
+        public IHttpActionResult CoursesReservation(ReservationDto reservationdto)
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                dynamic data = service.CoursesReservation(reservationdto);
+
+                if (!string.IsNullOrEmpty(data))
+                {
+                    res.code = "100";
+                    res.msg = data;
+                }
+
+                res.resData = null;
+
+                //res.resData = JsonConvert.DeserializeObject(data);
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+            }
+
+            return Ok(res);
+        }
 
     }
 }

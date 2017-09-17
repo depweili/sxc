@@ -101,6 +101,7 @@
   <ItemGroup>
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\IntegralController.cs" />
     <Compile Include="Controllers\SxcWxController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UtilityController.cs" />

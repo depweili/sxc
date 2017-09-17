@@ -58,9 +58,13 @@
     <Compile Include="Mappings\AgentMap.cs" />
     <Compile Include="Mappings\ArticleMap.cs" />
     <Compile Include="Mappings\Base_AreaMap.cs" />
+    <Compile Include="Mappings\CooperationMap.cs" />
     <Compile Include="Mappings\CourseMap.cs" />
+    <Compile Include="Mappings\IntegralMap.cs" />
     <Compile Include="Mappings\NavigationMap.cs" />
     <Compile Include="Mappings\PromotionMap.cs" />
+    <Compile Include="Mappings\ReservationMap.cs" />
+    <Compile Include="Mappings\StoreMap.cs" />
     <Compile Include="Mappings\TeacherMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />
     <Compile Include="Migrations\201708291538392_InitialCreate.cs" />
@@ -83,13 +87,37 @@
     <Compile Include="Migrations\201709121041160_zs1.3.Designer.cs">
       <DependentUpon>201709121041160_zs1.3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709140826437_zs1.4.cs" />
+    <Compile Include="Migrations\201709140826437_zs1.4.Designer.cs">
+      <DependentUpon>201709140826437_zs1.4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709151458356_zs1.5.cs" />
+    <Compile Include="Migrations\201709151458356_zs1.5.Designer.cs">
+      <DependentUpon>201709151458356_zs1.5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709170252434_zs1.6.cs" />
+    <Compile Include="Migrations\201709170252434_zs1.6.Designer.cs">
+      <DependentUpon>201709170252434_zs1.6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709171600465_zs1.7.cs" />
+    <Compile Include="Migrations\201709171600465_zs1.7.Designer.cs">
+      <DependentUpon>201709171600465_zs1.7.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709171609297_zs1.8.cs" />
+    <Compile Include="Migrations\201709171609297_zs1.8.Designer.cs">
+      <DependentUpon>201709171609297_zs1.8.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Agent.cs" />
     <Compile Include="Models\Article.cs" />
     <Compile Include="Models\Base_Area.cs" />
+    <Compile Include="Models\Cooperation.cs" />
+    <Compile Include="Models\Integral.cs" />
     <Compile Include="Models\Promotion.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\Navigation.cs" />
+    <Compile Include="Models\Reservation.cs" />
+    <Compile Include="Models\Store.cs" />
     <Compile Include="Models\Teacher.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -120,7 +148,23 @@
     <EmbeddedResource Include="Migrations\201709121041160_zs1.3.resx">
       <DependentUpon>201709121041160_zs1.3.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709140826437_zs1.4.resx">
+      <DependentUpon>201709140826437_zs1.4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709151458356_zs1.5.resx">
+      <DependentUpon>201709151458356_zs1.5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709170252434_zs1.6.resx">
+      <DependentUpon>201709170252434_zs1.6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709171600465_zs1.7.resx">
+      <DependentUpon>201709171600465_zs1.7.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709171609297_zs1.8.resx">
+      <DependentUpon>201709171609297_zs1.8.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -26,6 +26,8 @@ namespace SXC.Services.Dto
 
         public bool isagent { get; set; }
 
+        public bool issignin { get; set; }
+
         public Nullable<bool> isvalid { get; set; }
 
         public Nullable<bool> isverified { get; set; }

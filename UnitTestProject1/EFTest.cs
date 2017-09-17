@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SXC.Code.Utility;
 using SXC.Core.Data;
 using SXC.Core.Models;
+using SXC.Services.Business;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -3499,5 +3501,51 @@ SELECT * FROM temp");
 
             }
         }
+
+
+        [TestMethod]
+        public void IntegralUser()
+        {
+            using (var db = new SxcDbContext())
+            {
+                var query = db.Users.Where(t => t.IsValid == true);
+
+                var uilist = new List<UserIntegral>();
+                foreach (var user in query)
+                {
+                    if (user.UserIntegral == null)
+                    {
+                        uilist.Add(new UserIntegral {
+                            User = user
+                        });
+                    }
+                }
+
+                db.UserIntegrals.AddRange(uilist);
+
+                db.SaveChanges();
+            }
+
+        }
+
+        [TestMethod]
+        public void TestShare()
+        {
+            using (var db = new SxcDbContext())
+            {
+                var sharecode = "d119e6d4-1bb0-40d4-ba5f-2bb10a31778b";
+                Guid authid = ConvertHelper.StrToGuid(sharecode, default(Guid));
+                var shareui = db.UserIntegrals.FirstOrDefault(t => t.User.AuthID == authid);
+                if (shareui != null)
+                {
+                    var bus = new IntegralBus(db);
+                    bus.IntegralProcess(shareui, "分享有礼", null);
+                }
+            }
+
+        }
+
+
+
     }
 }

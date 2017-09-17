@@ -62,15 +62,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessBase.cs" />
+    <Compile Include="Business\IntegralBus.cs" />
     <Compile Include="Dto\AgentDto.cs" />
     <Compile Include="Dto\ArticleDto.cs" />
+    <Compile Include="Dto\BaseDto.cs" />
+    <Compile Include="Dto\CooperationDto.cs" />
     <Compile Include="Dto\CourseDto.cs" />
+    <Compile Include="Dto\IntegralDto.cs" />
     <Compile Include="Dto\NavDto.cs" />
     <Compile Include="Dto\PromotionDto.cs" />
+    <Compile Include="Dto\ReservationDto.cs" />
+    <Compile Include="Dto\StoreDto.cs" />
     <Compile Include="Dto\TeacherDto.cs" />
     <Compile Include="Dto\UserDto.cs" />
     <Compile Include="Function.cs" />
+    <Compile Include="Impl\IntegralService.cs" />
     <Compile Include="Impl\NavigationService.cs" />
+    <Compile Include="Impl\StoreService.cs" />
     <Compile Include="Impl\UtilityService.cs" />
     <Compile Include="Impl\WxService.cs" />
     <Compile Include="IWxService.cs" />

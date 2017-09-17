@@ -35,6 +35,13 @@ namespace SXC.Services
             return url;
         }
 
+        public static string GetStaticPicUrl(string pic)
+        {
+            var host = GetHostAndApp();
+            var url = host + @"/Images/" + pic;
+            return url;
+        }
+
         public static string GetImageDirectory()
         {
             var imgDir = ConfigHelper.GetSetting("ImagesPhysicalPath");
@@ -69,9 +76,8 @@ namespace SXC.Services
             var list = db.Database.SqlQuery<int>(supsql);
 
             return list.ToList().Contains(tid);
-
-
- 
         }
+
+
     }
 }

@@ -9,6 +9,8 @@ using SXC.Code;
 using SXC.Core.Models;
 using Newtonsoft.Json;
 using System.Data.Entity;
+using SXC.Services.Business;
+using SXC.Code.Utility;
 
 namespace SXC.Services.Impl
 {
@@ -73,11 +75,20 @@ namespace SXC.Services.Impl
             }
         }
 
-        public List<CourseDto> GetCourses()
+        public List<CourseDto> GetCourses(int? top=null)
         {
             using (var db = base.NewDB())
             {
-                var dblist = db.Courses.Where(t => t.IsValid == true).OrderBy(t => t.Order).ToList();
+                List<Course> dblist;
+
+                if (top == null)
+                {
+                    dblist = db.Courses.Where(t => t.IsValid == true).OrderBy(t => t.Order).ToList();
+                }
+                else
+                {
+                    dblist = db.Courses.Where(t => t.IsValid == true).OrderBy(t => t.Order).Take(top.Value).ToList();
+                }
 
                 var res = new List<CourseDto>();
                 foreach (var item in dblist)
@@ -92,7 +103,6 @@ namespace SXC.Services.Impl
                         articleid = item.ArticleID
                     });
                 }
-
                 return res;
             }
         }
@@ -224,8 +234,6 @@ namespace SXC.Services.Impl
 
                     if (dbitem == null)
                     {
-                        
-
                         User user = new User();
                         db.Users.Add(user);
                         //db.SaveChanges();
@@ -255,12 +263,38 @@ namespace SXC.Services.Impl
                         };
                         db.Agents.Add(agent);
 
+                        UserIntegral ui = new UserIntegral
+                        {
+                            User = user
+                        };
+                        db.UserIntegrals.Add(ui);
 
                         db.SaveChanges();
 
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(wxuser.sharecode))
+                            {
+                                Guid authid = ConvertHelper.StrToGuid(wxuser.sharecode, default(Guid));
+                                var shareui = db.UserIntegrals.FirstOrDefault(t => t.User.AuthID == authid);
+                                if (shareui != null)
+                                {
+                                    var bus = new IntegralBus(db);
+                                    bus.IntegralProcess(shareui, "分享有礼", user);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+
+                        dbitem = db.UserAuths.FirstOrDefault(t => t.IdentityType == "wx" && t.Identifier == openid);
                     }
 
-                    dbitem = db.UserAuths.FirstOrDefault(t => t.IdentityType == "wx" && t.Identifier == openid);
+                    dbitem.LastActiveTime = DateTime.Now;
+                    db.SaveChanges();
+                    //dbitem = db.UserAuths.FirstOrDefault(t => t.IdentityType == "wx" && t.Identifier == openid);
 
                     UserDto userdto = new UserDto
                     {
@@ -305,6 +339,13 @@ namespace SXC.Services.Impl
                         userdto.isagentvalid = dbitem.User.Agent.IsValid;
                     }
 
+                    var signin = db.IntegralSignIns.FirstOrDefault(t => t.UserIntegral.User.ID == dbitem.User.ID);
+
+                    if (signin != null && signin.LastTime != null && signin.LastTime.Value.Date == DateTime.Now.Date)
+                    {
+                        userdto.issignin = true;
+                    }
+
                     //return new ArticleDto { content = dbitem == null ? null : dbitem.Content };
                     return userdto;
                 }
@@ -313,7 +354,6 @@ namespace SXC.Services.Impl
             {
                 return null;
             }
-            
         }
 
 
@@ -568,6 +608,84 @@ namespace SXC.Services.Impl
                 return agentDto;
             }
         }
+
+        public string CooperationJoin(CooperationDto coopdto)
+        {
+            using (var db = base.NewDB())
+            {
+                var dbitem = db.Users.FirstOrDefault(t => t.AuthID == coopdto.authid);
+
+                if (dbitem == null)
+                {
+                    return "申请用户异常";
+                }
+
+                Cooperation coop = new Cooperation
+                {
+                    Address = coopdto.address,
+                    User = dbitem,
+                    AreaID = coopdto.areaid,
+                    Level = coopdto.level,
+                    Memo = coopdto.memo,
+                    MobilePhone = coopdto.mobilephone,
+                    Name = coopdto.name,
+                    Type = coopdto.type,
+                    AgentAreaInfo = coopdto.agentareainfo,
+                    AreaInfo=coopdto.areainfo
+                };
+
+                db.Cooperations.Add(coop);
+
+                db.SaveChanges();
+
+                return string.Empty;
+            }
+        }
+
+
+        public string CoursesReservation(ReservationDto reservationdto)
+        {
+            using (var db = base.NewDB())
+            {
+                var dbitem = db.Users.FirstOrDefault(t => t.AuthID == reservationdto.authid);
+
+                if (dbitem == null || dbitem.Agent == null)
+                {
+                    return "申请用户异常";
+                }
+
+                Reservation reservation = new Reservation
+                {
+                    Address = reservationdto.address,
+                    User = dbitem,
+                    Memo = reservationdto.memo,
+                    MobilePhone = reservationdto.mobilephone,
+                    Name = reservationdto.name,
+                    //PurposeID = reservationdto.purposeid
+                    Purpose = reservationdto.purpose,
+                    AreaInfo = reservationdto.areainfo
+                };
+
+                List<ReservationCourse> rclist=new List<ReservationCourse>();
+                foreach(var id in reservationdto.courseids.Split(','))
+                {
+                    rclist.Add(new ReservationCourse
+                    {
+                        CourseID = int.Parse(id),
+                        Reservation = reservation
+                    });
+                }
+
+                reservation.ReservationCourses = rclist;
+
+                db.Reservations.Add(reservation);
+
+                db.SaveChanges();
+
+                return string.Empty;
+            }
+        }
+
         
 
     }

@@ -13,6 +13,7 @@ namespace SXC.Core.Mappings
         public Base_AreaMap()
         {
             this.Property(t => t.Name).HasMaxLength(20);
+            this.Property(t => t.Code).HasMaxLength(20);
         }
     }
 }
