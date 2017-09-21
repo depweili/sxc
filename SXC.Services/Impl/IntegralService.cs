@@ -12,7 +12,33 @@ namespace SXC.Services.Impl
     {
         public int? IntNull = null;
 
-        public IntegralDto DailySignIn(Guid uid)
+        public UserIntegralDto GetUserIntegral(Guid authid)
+        {
+            using (var db = base.NewDB())
+            {
+                var dbitem = db.Users.FirstOrDefault(t => t.IsValid == true && t.AuthID == authid);
+
+                if (dbitem == null)
+                {
+                    throw new Exception("用户异常");
+                }
+
+                var ui = dbitem.UserIntegral;
+
+                var uidto = new UserIntegralDto
+                {
+                    integralid = ui.IntegralID,
+                    gradetitle = ui.IntegralGrade.Title,
+                    totalpoints = ui.TotalPoints,
+                    currentpoints = ui.CurrentPoints,
+                    totalexpense = ui.TotalExpense
+                };
+
+                return uidto;
+            }
+        }
+
+        public IntegralActionResultDto DailySignIn(Guid uid)
         {
             string res = string.Empty;
             using (var db = base.NewDB())
@@ -27,22 +53,16 @@ namespace SXC.Services.Impl
                 var bus = new IntegralBus(db);
                 var data = bus.IntegralProcess(dbitem.UserIntegral,"每日签到",null);
 
-                var ir = new IntegralRecordDto
+                db.SaveChanges();
+
+                var integraldto = new IntegralActionResultDto
                 {
-                    points = data.Points,
-                    totalpoints = data.UserIntegral.TotalPoints,
-                    currentpoints = data.UserIntegral.CurrentPoints,
-
-                };
-
-                var integraldto = new IntegralDto {
                     message = bus.Message,
-                    detail = new IntegralRecordDto
+                    detail = new IntegralChangeDto
                     {
                         points = data.Points,
                         totalpoints = data.UserIntegral.TotalPoints,
-                        currentpoints = data.UserIntegral.CurrentPoints,
-
+                        currentpoints = data.UserIntegral.CurrentPoints
                     }
 
                 };
@@ -52,5 +72,25 @@ namespace SXC.Services.Impl
         }
 
 
+        public List<IntegralRecordDto> GetIntegralRecords(Guid uid)
+        {
+            using (var db = base.NewDB())
+            {
+
+                var dblist = db.IntegralRecords.Where(t => t.UserIntegral.IntegralID == uid).OrderByDescending(t => t.RecordTime);
+
+                var res = new List<IntegralRecordDto>();
+                foreach (var item in dblist)
+                {
+                    res.Add(new IntegralRecordDto
+                    {
+                        shortmark = item.ShortMark,
+                        points = item.Points,
+                        recordtime = item.RecordTime
+                    });
+                }
+                return res;
+            }
+        }
     }
 }

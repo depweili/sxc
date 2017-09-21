@@ -54,6 +54,10 @@ namespace SXC.Core.Data
 
         public DbSet<Category> Categorys { get; set; }
         public DbSet<Commodity> Commoditys { get; set; }
+        public DbSet<OrderInfo> OrderInfos { get; set; }
+        public DbSet<OrderCommodity> OrderCommoditys { get; set; }
+
+        public DbSet<OrderIntegralRecord> OrderIntegralRecords { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -89,6 +93,9 @@ namespace SXC.Core.Data
 
             modelBuilder.Configurations.Add(new CategoryMap());
             modelBuilder.Configurations.Add(new CommodityMap());
+
+            modelBuilder.Configurations.Add(new OrderInfoMap());
+            modelBuilder.Configurations.Add(new OrderCommodityMap());
 
 
             //////////////////////////////////////////////

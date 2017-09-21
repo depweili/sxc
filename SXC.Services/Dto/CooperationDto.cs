@@ -8,6 +8,10 @@ namespace SXC.Services.Dto
 {
     public class CooperationDto
     {
+        public CooperationDto()
+        {
+            //areaid = null;
+        }
         public int id { get; set; }
 
         public Guid authid { get; set; }

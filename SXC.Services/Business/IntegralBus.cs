@@ -43,14 +43,29 @@ namespace SXC.Services.Business
             {
                 if(_isSave)
                 {
+                    record.UserIntegral.CurrentPoints += record.Points;
+                    
+                    if (record.Points > 0)
+                    {
+                        record.UserIntegral.IntegralUserActivitys.FirstOrDefault(t => t.IntegralActivity == record.IntegralActivity).TotalPoints += record.Points;
+                        record.UserIntegral.TotalPoints += record.Points;
+                        record.ValidPoints = record.Points;
+                    }
+
+                    if (record.Points < 0)
+                    {
+                        record.UserIntegral.TotalExpense += (-record.Points);
+
+                        IntegralRecordsExpense(record.UserIntegral, record.Points);
+                    }
+
+                    record.TotalPoints = record.UserIntegral.TotalPoints;
+
+                    record.CurrentPoints = record.UserIntegral.CurrentPoints;
+
                     record = _context.IntegralRecords.Add(record);
 
-                    record.UserIntegral.IntegralUserActivitys.FirstOrDefault(t => t.IntegralActivity == record.IntegralActivity).TotalPoints += record.Points;
-
-                    record.UserIntegral.TotalPoints += record.Points;
-                    record.UserIntegral.CurrentPoints += record.Points;
-
-                    _context.SaveChanges();
+                    //_context.SaveChanges();//不允许启动新事务，因为有其他线程正在该会话中运行 外部可能还在循环中
                 }
                 
             }
@@ -173,7 +188,7 @@ namespace SXC.Services.Business
                     IntegralActivity = activity,
                     UserIntegral = ui,
                     ShortMark = activityname,
-                    Points = GetPoints(ui, activity)
+                    Points = GetPoints(ui, activity, extdata)
                     //Content = BuildRecordContent(activityname, extdata)
                 };
 
@@ -186,7 +201,7 @@ namespace SXC.Services.Business
             }
         }
 
-        private int GetPoints(UserIntegral ui, IntegralActivity activity)
+        private int GetPoints(UserIntegral ui, IntegralActivity activity, dynamic extdata)
         {
             int res = 0;
             if (activity.Name == "每日签到")
@@ -198,8 +213,16 @@ namespace SXC.Services.Business
                 var rule = activity.IntegralRule;
                 switch (rule.Type)
                 {
-                    case 1:
+                    case 1://单次获得积分
                         res = rule.Points.Value;
+                        break;
+                    case 2://外部获取积分
+                        res = extdata.Points;
+                        break;
+                    case 3://持续获得积分
+                        break;
+                    case 4://外部消耗积分
+                        res = extdata.Points;
                         break;
                     default:
                         break;
@@ -207,6 +230,37 @@ namespace SXC.Services.Business
             }
 
             return res;
+        }
+
+        private void IntegralRecordsExpense(UserIntegral ui, int Points)
+        {
+            var ps = -Points;
+            var list=_context.IntegralRecords.Where(t=>t.UserIntegral.ID==ui.ID&&t.ValidPoints>0&&ui.IsValid==true).OrderBy(t=>t.ExpiredTime).ThenBy(t=>t.RecordTime);
+
+            foreach (var r in list)
+            {
+                if (r.ValidPoints >= ps)
+                {
+                    r.ValidPoints = r.ValidPoints - ps;
+                    r.ExpensePoints = r.ExpensePoints + ps;
+                    ps = 0;
+                    break;
+                }
+                else
+                {
+                    ps = ps - r.ValidPoints;
+                    r.ExpensePoints = r.ExpensePoints + r.ValidPoints;
+                    r.ValidPoints = 0;
+                }
+            }
+
+            if (ps > 0)
+            {
+                _isSave = false;
+                _error = "积分数据异常";
+                _message = "积分兑换失败";
+            }
+
         }
 
         public string BuildRecordContent(string activityname, dynamic extdata)

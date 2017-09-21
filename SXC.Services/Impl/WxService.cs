@@ -49,11 +49,11 @@ namespace SXC.Services.Impl
         }
 
 
-        public List<TeacherDto> GetTeachers()
+        public List<TeacherDto> GetTeachers(int type=0)
         {
             using (var db = base.NewDB())
             {
-                var dblist = db.Teachers.Where(t => t.IsValid == true).OrderBy(t => t.Order).ToList();
+                var dblist = db.Teachers.Where(t => t.IsValid == true && t.Type == type).OrderBy(t => t.Order).ToList();
 
                 var res = new List<TeacherDto>();
                 foreach (var item in dblist)
@@ -99,6 +99,8 @@ namespace SXC.Services.Impl
                         name = item.Name,
                         desc = item.Desc,
                         picurl = GetPicUrl(item.Pic),
+                        hasvideo = item.HasVideo,
+                        hasfreevideo = item.HasFreeVideo,
                         //articleid = item.Article == null ? IntNull : item.Article.ID
                         articleid = item.ArticleID
                     });
@@ -125,6 +127,8 @@ namespace SXC.Services.Impl
                         desc = dbitem.Desc,
                         period = dbitem.Period,
                         price = dbitem.Price,
+                        hasvideo = dbitem.HasVideo,
+                        hasfreevideo = dbitem.HasFreeVideo,
                         picurl = GetPicUrl(dbitem.Pic),
                         //articleid = item.Article == null ? IntNull : item.Article.ID
                         articleid = dbitem.ArticleID
@@ -269,7 +273,7 @@ namespace SXC.Services.Impl
                         };
                         db.UserIntegrals.Add(ui);
 
-                        db.SaveChanges();
+                        
 
                         try
                         {
@@ -288,6 +292,8 @@ namespace SXC.Services.Impl
                         {
 
                         }
+
+                        db.SaveChanges();
 
                         dbitem = db.UserAuths.FirstOrDefault(t => t.IdentityType == "wx" && t.Identifier == openid);
                     }

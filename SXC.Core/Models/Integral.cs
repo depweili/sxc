@@ -14,6 +14,8 @@ namespace SXC.Core.Models
             IsValid = true;
             CreateTime = DateTime.Now;
             IntegralID = Guid.NewGuid();
+            IntegralGradeID = 1;
+
         }
         public int ID { get; set; }
 
@@ -153,6 +155,10 @@ namespace SXC.Core.Models
         public string ShortMark { get; set; }
 
         public int Points { get; set; }
+
+        public int TotalPoints { get; set; }
+
+        public int CurrentPoints { get; set; }
 
         public int ValidPoints { get; set; }
 

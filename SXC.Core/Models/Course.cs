@@ -28,6 +28,10 @@ namespace SXC.Core.Models
 
         public double? Period { get; set; }
 
+        public bool? HasVideo { get; set; }
+
+        public bool? HasFreeVideo { get; set; }
+
         public int Order { get; set; }
 
         public Nullable<bool> IsValid { get; set; }

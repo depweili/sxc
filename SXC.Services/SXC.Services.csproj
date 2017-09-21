@@ -38,6 +38,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EntityFramework.Extended, Version=6.0.0.0, Culture=neutral, PublicKeyToken=05b7e29bdd433584, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.Extended.6.1.0.168\lib\net45\EntityFramework.Extended.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
@@ -64,9 +68,11 @@
   <ItemGroup>
     <Compile Include="BusinessBase.cs" />
     <Compile Include="Business\IntegralBus.cs" />
+    <Compile Include="Business\StoreBus.cs" />
     <Compile Include="Dto\AgentDto.cs" />
     <Compile Include="Dto\ArticleDto.cs" />
     <Compile Include="Dto\BaseDto.cs" />
+    <Compile Include="Dto\BusinessResultDto.cs" />
     <Compile Include="Dto\CooperationDto.cs" />
     <Compile Include="Dto\CourseDto.cs" />
     <Compile Include="Dto\IntegralDto.cs" />

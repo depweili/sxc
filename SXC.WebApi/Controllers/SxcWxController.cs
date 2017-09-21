@@ -67,6 +67,31 @@ namespace SXC.WebApi.Controllers
         }
 
         /// <summary>
+        /// 专家信息
+        /// </summary>
+        /// <returns></returns>
+        [Route("api/Experts")]
+        [HttpGet]
+        public IHttpActionResult GetExperts()
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                var data = service.GetTeachers(1);
+
+                res.resData = data;
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+
+            }
+            return Ok(res);
+        }
+
+        /// <summary>
         /// 课程信息
         /// </summary>
         /// <returns></returns>

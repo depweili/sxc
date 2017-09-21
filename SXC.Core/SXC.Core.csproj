@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constant.cs" />
     <Compile Include="Data\SxcDbContext.cs" />
     <Compile Include="Data\SxcDbContextInitializer.cs" />
     <Compile Include="Mappings\AgentMap.cs" />
@@ -106,6 +107,22 @@
     <Compile Include="Migrations\201709171609297_zs1.8.cs" />
     <Compile Include="Migrations\201709171609297_zs1.8.Designer.cs">
       <DependentUpon>201709171609297_zs1.8.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709181520543_zs1.9.cs" />
+    <Compile Include="Migrations\201709181520543_zs1.9.Designer.cs">
+      <DependentUpon>201709181520543_zs1.9.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709201447151_zs2.0.cs" />
+    <Compile Include="Migrations\201709201447151_zs2.0.Designer.cs">
+      <DependentUpon>201709201447151_zs2.0.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709201914534_zs2.1.cs" />
+    <Compile Include="Migrations\201709201914534_zs2.1.Designer.cs">
+      <DependentUpon>201709201914534_zs2.1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709211413527_zs2.2.cs" />
+    <Compile Include="Migrations\201709211413527_zs2.2.Designer.cs">
+      <DependentUpon>201709211413527_zs2.2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Agent.cs" />
@@ -162,6 +179,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709171609297_zs1.8.resx">
       <DependentUpon>201709171609297_zs1.8.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709181520543_zs1.9.resx">
+      <DependentUpon>201709181520543_zs1.9.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709201447151_zs2.0.resx">
+      <DependentUpon>201709201447151_zs2.0.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709201914534_zs2.1.resx">
+      <DependentUpon>201709201914534_zs2.1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709211413527_zs2.2.resx">
+      <DependentUpon>201709211413527_zs2.2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

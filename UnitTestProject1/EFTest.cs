@@ -5,6 +5,7 @@ using SXC.Core.Models;
 using SXC.Services.Business;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -3541,10 +3542,39 @@ SELECT * FROM temp");
                     var bus = new IntegralBus(db);
                     bus.IntegralProcess(shareui, "分享有礼", null);
                 }
+
+                db.SaveChanges();
             }
 
         }
 
+
+        [TestMethod]
+        public void SendTestPoints()
+        {
+            using (var db = new SxcDbContext())
+            {
+                db.Database.Log = Console.WriteLine;
+
+                var query = db.Users.Where(t => new int[] { 5,6,9,32 }.Contains(t.ID));
+                //var query = db.Users.Where(t => new int[] { 32 }.Contains(t.ID)).Select(t => new { t.UserIntegral }).ToList();
+
+                foreach (var user in query)
+                {
+                    var bus = new IntegralBus(db);
+
+                    dynamic extdata = new ExpandoObject();
+
+                    extdata.Points = 400;
+
+                    var res = bus.IntegralProcess(user.UserIntegral, "积分测试", extdata);
+
+                    string ss = "asd";
+                }
+
+                db.SaveChanges();
+            }
+        }
 
 
     }

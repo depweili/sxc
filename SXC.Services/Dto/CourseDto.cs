@@ -21,6 +21,10 @@ namespace SXC.Services.Dto
 
         public double? period { get; set; }
 
+        public bool? hasvideo { get; set; }
+
+        public bool? hasfreevideo { get; set; }
+
         public string picurl { get; set; }
 
         public int? articleid { get; set; }

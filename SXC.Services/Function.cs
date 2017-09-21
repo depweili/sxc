@@ -27,12 +27,20 @@ namespace SXC.Services
 
         public static string GetPicUrl(string pic)
         {
-            var host = GetHostAndApp();
-            //Server.MapPath();
-            //var url = host + @"/SxcWebApi/api/Image/" + Cryptography.Base64ForUrlEncode(pic);
-            var url = host + @"/api/Image/" + Cryptography.Base64ForUrlEncode(pic);
-            //return @"http://192.168.31.199/SxcWebApi/api/Image/" + Cryptography.Base64ForUrlEncode(pic);
-            return url;
+            try
+            {
+                var host = GetHostAndApp();
+                //Server.MapPath();
+                //var url = host + @"/SxcWebApi/api/Image/" + Cryptography.Base64ForUrlEncode(pic);
+                var url = host + @"/api/Image/" + Cryptography.Base64ForUrlEncode(pic);
+                //return @"http://192.168.31.199/SxcWebApi/api/Image/" + Cryptography.Base64ForUrlEncode(pic);
+                return url;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+           
         }
 
         public static string GetStaticPicUrl(string pic)
