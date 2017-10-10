@@ -22,7 +22,7 @@ using System.Dynamic;
 
 namespace SXC.WebApi.Controllers
 {
-    public class TestController : ApiController
+    public class TestController : ApiControllerBase
     {
         #region 废弃
         //[Route("api/xxxNavigationsold")]
@@ -74,7 +74,7 @@ namespace SXC.WebApi.Controllers
         public IHttpActionResult GetWxUser(string code, string iv, string encryptedData)
         {
             string Appid = "wx12a7e3bf7a31d815";
-            string Secret = ConfigHelper.GetSetting("Wx_Secret");//ConfigurationManager.AppSettings["Wx_Secret"]; //"b4722d8a6a5629ed7717e58d1af431ba"; 
+            string Secret = ConfigHelper.GetConfig("Wx_Secret");//ConfigurationManager.AppSettings["Wx_Secret"]; //"b4722d8a6a5629ed7717e58d1af431ba"; 
             string grant_type = "authorization_code";
 
 

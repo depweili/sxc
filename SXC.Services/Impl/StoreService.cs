@@ -36,7 +36,8 @@ namespace SXC.Services.Impl
                         commodityuid = item.CommodityUID,
                         name = item.Name,
                         pic = Function.GetStaticPicUrl(item.Pic),
-                        points = item.Points
+                        points = item.Points,
+                        isreal = item.IsReal ?? true
                     });
                 }
 
@@ -69,6 +70,7 @@ namespace SXC.Services.Impl
                     price = dbitem.Price,
                     isvalid = dbitem.IsValid,
                     stock = dbitem.Stock,
+                    isreal = dbitem.IsReal ?? true,
                     detailAttrs = GetAttrs(dbitem.Details)
                 };
 
@@ -185,7 +187,8 @@ namespace SXC.Services.Impl
                         points = firstCommodity.Points,
                         quantity = firstCommodity.Quantity,
                         totalpoints = item.TotalPoints,
-                        createtime = item.CreateTime
+                        createtime = item.CreateTime,
+                        hasvideo = item.OrderCommoditys.First().Commodity.HasVideo
 
                     });
                 }
@@ -198,6 +201,55 @@ namespace SXC.Services.Impl
                 };
 
                 return res;
+            }
+        }
+
+
+        public VideoSeriesDto GetVideoByOrder(Guid orderuid)
+        {
+            try
+            {
+                using (var db = base.NewDB())
+                {
+                    var commodity = db.OrderInfos.SingleOrDefault(t => t.OrderUID == orderuid).OrderCommoditys.Single().Commodity;
+                    var videos = db.CommodityVideoSeries.Single(t => t.CommodityID==commodity.ID).VideoSeries;
+                    var videolist = videos.VideoInfos.OrderBy(t => t.Order);
+
+                    List<VideoInfoDto> videodtolist = new List<VideoInfoDto>();
+
+
+                    foreach (var v in videolist)
+                    {
+                        videodtolist.Add(new VideoInfoDto
+                        {
+                            id = v.ID,
+                            introduction = v.Introduction,
+                            order = v.Order,
+                            title = v.Title,
+                            //length = v.Length,
+                            snapshot = v.Snapshot,
+                            src = v.Source,
+                            videouid = v.VideoUID
+                        });
+                    }
+
+                    VideoSeriesDto res = new VideoSeriesDto
+                    {
+                        id = videos.ID,
+                        cover = videos.Cover,
+                        title = videos.Title,
+                        total = videos.Total??0,
+                        videoseriesuid = videos.VideoSeriesUID,
+                        VideoList = videodtolist
+                    };
+
+                    return res;
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

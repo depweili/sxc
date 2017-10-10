@@ -11,10 +11,12 @@ using SXC.Services;
 using SXC.WebApi.Utility;
 using Newtonsoft.Json;
 using SXC.Services.Dto;
+using System.Net.Http.Headers;
+using SXC.Code.Log;
 
 namespace SXC.WebApi.Controllers
 {
-    public class SxcWxController : ApiController
+    public class SxcWxController : ApiControllerBase
     {
         /// <summary>
         /// 导航信息
@@ -180,6 +182,31 @@ namespace SXC.WebApi.Controllers
             {
                 var service = new WxService();
                 var data = service.GetPromotions();
+
+                res.resData = data;
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+
+            }
+            return Ok(res);
+        }
+
+        /// <summary>
+        /// 获取通知
+        /// </summary>
+        /// <returns></returns>
+        [Route("api/Notices")]
+        [HttpGet]
+        public IHttpActionResult GetNotices()
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                var data = service.GetPromotions(2);
 
                 res.resData = data;
             }
@@ -430,6 +457,46 @@ namespace SXC.WebApi.Controllers
             }
 
             return Ok(res);
+        }
+
+
+        /// <summary>
+        /// 获取代理二维码
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        [Route("api/QrCode/Agent/{code}")]
+        [HttpGet]
+        public HttpResponseMessage GetAgentQrCode(string code)
+        {
+            try
+            {
+                var service = new UtilityService();
+
+                var wxservice = new WxService();
+
+                var qrcontent = code + "|" + wxservice.GetNickNameByAgentCode(code);
+
+                var imgByte = service.GetGetQrCode(qrcontent);
+
+                var resp = new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new ByteArrayContent(imgByte)
+                };
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+
+                return resp;
+            }
+            catch (Exception ex)
+            {
+                var resp = new HttpResponseMessage(HttpStatusCode.InternalServerError)
+                {
+                    Content = new StringContent(ex.Message)
+                };
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+
+                return resp;
+            }
         }
 
         /// <summary>

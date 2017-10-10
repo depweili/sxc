@@ -59,9 +59,13 @@ namespace SXC.Core.Data
 
         public DbSet<OrderIntegralRecord> OrderIntegralRecords { get; set; }
 
+        public DbSet<VideoSeries> VideoSeries { get; set; }
+        public DbSet<VideoInfo> VideoInfos { get; set; }
+        public DbSet<CommodityVideoSeries> CommodityVideoSeries { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            string tbPrefix = ConfigHelper.GetSetting("tablePrefix");//ConfigurationManager.AppSettings["tablePrefix"];
+            string tbPrefix = ConfigHelper.GetConfig("tablePrefix");//ConfigurationManager.AppSettings["tablePrefix"];
 
             if (!string.IsNullOrEmpty(tbPrefix))
             {
@@ -96,6 +100,9 @@ namespace SXC.Core.Data
 
             modelBuilder.Configurations.Add(new OrderInfoMap());
             modelBuilder.Configurations.Add(new OrderCommodityMap());
+
+            modelBuilder.Configurations.Add(new VideoSeriesMap());
+            modelBuilder.Configurations.Add(new VideoInfoMap());
 
 
             //////////////////////////////////////////////

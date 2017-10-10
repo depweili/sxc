@@ -52,7 +52,7 @@ namespace SXC.Services
 
         public static string GetImageDirectory()
         {
-            var imgDir = ConfigHelper.GetSetting("ImagesPhysicalPath");
+            var imgDir = ConfigHelper.GetConfig("ImagesPhysicalPath");
 
             if (string.IsNullOrEmpty(imgDir)) {
                 imgDir = HttpContext.Current.Server.MapPath("~/Images") + @"\";

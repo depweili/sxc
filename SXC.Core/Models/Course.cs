@@ -26,7 +26,7 @@ namespace SXC.Core.Models
 
         public decimal? Price { get; set; }
 
-        public double? Period { get; set; }
+        public string Period { get; set; }
 
         public bool? HasVideo { get; set; }
 

@@ -74,6 +74,8 @@ namespace SXC.Core.Models
 
         public bool? IsReal { get; set; }
 
+        public bool HasVideo { get; set; }
+
         public string Memo { get; set; }
 
         public Nullable<bool> IsValid { get; set; }
@@ -84,6 +86,8 @@ namespace SXC.Core.Models
         public virtual Category Category { get; set; }
 
         //public virtual ICollection<Commodity> CommodityGallerys { get; set; }
+
+        public virtual ICollection<CommodityVideoSeries> CommodityVideoSeries { get; set; }
     }
 
     public class CommodityGallery

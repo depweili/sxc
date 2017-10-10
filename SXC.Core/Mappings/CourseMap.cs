@@ -17,6 +17,7 @@ namespace SXC.Core.Mappings
             this.Property(t => t.Pic).HasMaxLength(50);
             this.Property(t => t.Content).HasMaxLength(1000);
             this.Property(t => t.Price).HasColumnType("MONEY");
+            this.Property(t => t.Period).HasMaxLength(20);
         }
     }
 }

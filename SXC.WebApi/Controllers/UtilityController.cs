@@ -2,6 +2,8 @@
 using Gma.QrCodeNet.Encoding.Windows.Render;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SXC.Code.Cache;
+using SXC.Code.Utility;
 using SXC.Services.Impl;
 using SXC.WebApi.Utility;
 using System;
@@ -18,7 +20,7 @@ using System.Web.Http;
 
 namespace SXC.WebApi.Controllers
 {
-    public class UtilityController : ApiController
+    public class UtilityController : ApiControllerBase
     {
         [Route("api/WxUserInfo")]
         [HttpGet]
@@ -42,17 +44,42 @@ namespace SXC.WebApi.Controllers
         {
             try
             {
-                var service = new UtilityService();
+                string key = "Image_" + img;
+                byte[] imgByte;
 
-                string mime;
+                if (CacheHelper.Exist(key))
+                {
+                    imgByte = CacheHelper.Get<byte[]>(key);
+                }
+                else
+                {
+                    var service = new UtilityService();
 
-                var imgByte = service.GetImageByEncrypt(img, out mime);
+                    string mime;
+
+                    imgByte = service.GetImageByEncrypt(img, out mime);
+
+                    CacheHelper.Set(key, imgByte, DateTime.Now.AddMinutes(_cacheabsoluteminutes));
+                }
 
                 var resp = new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new ByteArrayContent(imgByte)
                 };
-                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mime);
+
+
+                //var service = new UtilityService();
+
+                //string mime;
+
+                //var imgByte = service.GetImageByEncrypt(img, out mime);
+
+                //var resp = new HttpResponseMessage(HttpStatusCode.OK)
+                //{
+                //    Content = new ByteArrayContent(imgByte)
+                //};
+                //resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mime);
+
 
                 return resp;
             }
@@ -101,6 +128,10 @@ namespace SXC.WebApi.Controllers
                 return resp;
             }
         }
+
+
+
+        
 
 
         //[Route("api/XXQrCode/{content}")]

@@ -16,8 +16,8 @@ namespace SXC.WebApi.Utility
     {
         public dynamic GetWxUser(string code, string iv, string encryptedData)
         {
-            string Appid = Cryptography.Base64ForUrlDecode(ConfigHelper.GetSetting("Wx_Appid"));//"wx12a7e3bf7a31d815";
-            string Secret = ConfigHelper.GetSetting("Wx_Secret"); //ConfigurationManager.AppSettings["Wx_Secret"]; //"b4722d8a6a5629ed7717e58d1af431ba"; 
+            string Appid = Cryptography.Base64ForUrlDecode(ConfigHelper.GetConfig("Wx_Appid"));//"wx12a7e3bf7a31d815";
+            string Secret = ConfigHelper.GetConfig("Wx_Secret"); //ConfigurationManager.AppSettings["Wx_Secret"]; //"b4722d8a6a5629ed7717e58d1af431ba"; 
             string grant_type = "authorization_code";
 
 

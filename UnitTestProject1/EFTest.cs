@@ -3,6 +3,7 @@ using SXC.Code.Utility;
 using SXC.Core.Data;
 using SXC.Core.Models;
 using SXC.Services.Business;
+using SXC.Services.Dto;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -3548,6 +3549,104 @@ SELECT * FROM temp");
 
         }
 
+        [TestMethod]
+        public void TestDelUser()
+        {
+            using (var db = new SxcDbContext())
+            {
+                var strid = "3b58c209-95f5-43ac-847c-5ad738463887";
+                Guid authid = ConvertHelper.StrToGuid(strid, default(Guid));
+                var user = db.Users.Single(t => t.AuthID == authid);
+
+                db.UserAuths.Remove(db.UserAuths.Single(t => t.User.AuthID == authid));
+                db.UserIntegrals.Remove(db.UserIntegrals.Single(t => t.User.AuthID == authid));
+                db.UserProfiles.Remove(db.UserProfiles.Single(t => t.User.AuthID == authid));
+                db.Agents.Remove(db.Agents.Single(t => t.User.AuthID == authid));
+
+                db.Users.Remove(user);
+
+                db.SaveChanges();
+            }
+
+        }
+
+
+        [TestMethod]
+        public void TestCreateUser()
+        {
+            dynamic wxuser = new ExpandoObject();
+
+            wxuser.openid = "test123";
+            wxuser.sharecode = "e377c92c-5938-4bef-89e4-7edbf689bcbd";
+
+            using (var db = new SxcDbContext())
+            {
+                string openid = wxuser.openid;
+
+                var dbitem = db.UserAuths.FirstOrDefault(t => t.IdentityType == "wx" && t.Identifier == openid);
+
+                if (dbitem == null)
+                {
+                    User user = new User();
+                    db.Users.Add(user);
+                    //db.SaveChanges();
+
+                    UserProfile userpf = new UserProfile
+                    {
+                        ID = user.ID,
+                        NickName = "",
+                        AvatarUrl = ""
+                    };
+                    db.UserProfiles.Add(userpf);
+                    //db.SaveChanges();
+
+
+                    UserAuth ua = new UserAuth
+                    {
+                        IdentityType = "wx",
+                        Identifier = openid,
+                        User = user
+                    };
+
+                    db.UserAuths.Add(ua);
+
+
+                    Agent agent = new Agent
+                    {
+                        User = user
+                    };
+                    db.Agents.Add(agent);
+
+                    UserIntegral ui = new UserIntegral
+                    {
+                        User = user
+                    };
+                    db.UserIntegrals.Add(ui);
+
+
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(wxuser.sharecode))
+                        {
+                            Guid authid = ConvertHelper.StrToGuid(wxuser.sharecode, default(Guid));
+                            var shareui = db.UserIntegrals.FirstOrDefault(t => t.User.AuthID == authid);
+                            if (shareui != null)
+                            {
+                                var bus = new IntegralBus(db);
+                                bus.IntegralProcess(shareui, "分享有礼", user);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                    db.SaveChanges();
+                }
+            }
+        }
+
 
         [TestMethod]
         public void SendTestPoints()
@@ -3556,7 +3655,7 @@ SELECT * FROM temp");
             {
                 db.Database.Log = Console.WriteLine;
 
-                var query = db.Users.Where(t => new int[] { 5,6,9,32 }.Contains(t.ID));
+                var query = db.Users.Where(t => new int[] { 5, 6, 9, 32,12 }.Contains(t.ID));//5,6,9,32
                 //var query = db.Users.Where(t => new int[] { 32 }.Contains(t.ID)).Select(t => new { t.UserIntegral }).ToList();
 
                 foreach (var user in query)
@@ -3573,6 +3672,34 @@ SELECT * FROM temp");
                 }
 
                 db.SaveChanges();
+            }
+        }
+
+        [TestMethod]
+        public void TestEFSql()
+        {
+            using (var db = new SxcDbContext())
+            {
+                db.Database.Log = Console.WriteLine;
+
+                var dblist = db.Teachers.Where(t => t.IsValid == true).OrderBy(t => t.Order).ToList();
+
+                var res = new List<TeacherDto>();
+                foreach (var item in dblist)
+                {
+                    res.Add(new TeacherDto
+                    {
+                        id = item.ID,
+                        name = item.Name,
+                        title = item.Title,
+                        //picurl = GetPicUrl(item.Pic),
+                        introduction = item.Introduction,
+                        character = item.Character,
+                        //articleid = item.Article == null ? IntNull : item.Article.ID
+                        articleid = item.ArticleID
+                    });
+                }
+
             }
         }
 

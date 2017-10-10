@@ -19,7 +19,7 @@ namespace SXC.Services.Dto
         [JsonConverter(typeof(DecimalDigitsConverter))]
         public decimal? price { get; set; }
 
-        public double? period { get; set; }
+        public string period { get; set; }
 
         public bool? hasvideo { get; set; }
 

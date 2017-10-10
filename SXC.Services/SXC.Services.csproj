@@ -82,6 +82,7 @@
     <Compile Include="Dto\StoreDto.cs" />
     <Compile Include="Dto\TeacherDto.cs" />
     <Compile Include="Dto\UserDto.cs" />
+    <Compile Include="Dto\VideoDto.cs" />
     <Compile Include="Function.cs" />
     <Compile Include="Impl\IntegralService.cs" />
     <Compile Include="Impl\NavigationService.cs" />

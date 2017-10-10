@@ -99,8 +99,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\Filter.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ApiControllerBase.cs" />
     <Compile Include="Controllers\IntegralController.cs" />
     <Compile Include="Controllers\SxcWxController.cs" />
     <Compile Include="Controllers\TestController.cs" />
@@ -117,6 +119,7 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="Utility\WxUser.ashx" />
+    <Content Include="Configs\log4net.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

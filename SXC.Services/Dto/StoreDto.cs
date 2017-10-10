@@ -34,6 +34,8 @@ namespace SXC.Services.Dto
 
         public string pic { get; set; }
 
+        public bool isreal { get; set; }
+
         public string memo { get; set; }
 
         public Nullable<bool> isvalid { get; set; }
@@ -52,6 +54,8 @@ namespace SXC.Services.Dto
         public int points { get; set; }
 
         public string pic { get; set; }
+
+        public bool isreal { get; set; }
     }
 
     public class CommodityAttrDto
@@ -141,6 +145,8 @@ namespace SXC.Services.Dto
         public int quantity { get; set; }
 
         public int totalpoints { get; set; }
+
+        public bool hasvideo { get; set; }
 
         [JsonConverter(typeof(CommonDateTimeConverter))]
         public DateTime? createtime { get; set; }

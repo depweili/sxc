@@ -25,6 +25,8 @@ namespace SXC.Core.Models
 
         public string Location { get; set; }
 
+        public int Type { get; set; }
+
         public Nullable<DateTime> BeginTime { get; set; }
 
         public Nullable<DateTime> EndTime { get; set; }

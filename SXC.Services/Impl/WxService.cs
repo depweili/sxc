@@ -23,6 +23,11 @@ namespace SXC.Services.Impl
             //Server.MapPath();
             //return @"http://192.168.31.199/SxcWebApi/api/Image/" + Cryptography.Base64ForUrlEncode(pic);
 
+            if (string.IsNullOrEmpty(pic))
+            {
+                return string.Empty;
+            }
+
             return Function.GetPicUrl(pic);
         }
 
@@ -139,11 +144,11 @@ namespace SXC.Services.Impl
         }
 
 
-        public List<PromotionDto> GetPromotions()
+        public List<PromotionDto> GetPromotions(int type=0)
         {
             using (var db = base.NewDB())
             {
-                var dblist = db.Promotions.Where(t => t.IsValid == true).OrderBy(t => t.BeginTime).ToList();
+                var dblist = db.Promotions.Where(t => t.IsValid == true && t.Type == type).OrderBy(t => t.BeginTime).ToList();
 
                 var res = new List<PromotionDto>();
                 foreach (var item in dblist)
@@ -454,6 +459,7 @@ namespace SXC.Services.Impl
                     UserProfileDto userpfdto = new UserProfileDto
                     {
                         authid = authid,
+                        nickname = userpf.NickName,
                         realname = userpf.RealName,
                         gender = userpf.Gender,
                         address = userpf.Address,
@@ -561,20 +567,34 @@ namespace SXC.Services.Impl
         {
             using (var db = base.NewDB())
             {
-                db.Database.Log=Console.WriteLine;
+                db.Database.Log = Console.WriteLine;
 
                 //var dbitem = db.Users.Where(t => t.Agent.ParentAgent.User.AuthID == authid).Select(t=>new {t.UserProfile.NickName});
 
                 //var dbitem = db.Agents.FirstOrDefault(t => t.Code == agentcode).ChildAgents.Select(t => new { t.User.UserProfile.NickName});
 
-                var childlist = db.Agents.FirstOrDefault(t => t.Code == agentcode).ChildAgents;
+                var childlist = db.Agents.FirstOrDefault(t => t.Code == agentcode).ChildAgents.Select(t => new { t.ID, t.Level, t.Type, t.SupAgentBindTime });
+
+                //var dblist = from a in childlist
+                //             from u in db.UserProfiles
+                //             where a.ID == u.ID
+                //             select new { 
+                //                 avatarUrl = u.AvatarUrl,
+                //                 nickname = u.NickName, 
+                //                 realname = u.RealName,
+                //                 mobilePhone = u.MobilePhone,
+                //                 supagentbindTime = a.SupAgentBindTime,
+                //                 type = a.Type,
+                //                 level = a.Level
+                //             };
 
                 var dblist = from a in childlist
-                             from u in db.UserProfiles
-                             where a.User == u.User
-                             select new { 
+                             join u in db.UserProfiles
+                             on a.ID equals u.ID
+                             select new
+                             {
                                  avatarUrl = u.AvatarUrl,
-                                 nickname = u.NickName, 
+                                 nickname = u.NickName,
                                  realname = u.RealName,
                                  mobilePhone = u.MobilePhone,
                                  supagentbindTime = a.SupAgentBindTime,
@@ -612,6 +632,14 @@ namespace SXC.Services.Impl
                 };
 
                 return agentDto;
+            }
+        }
+
+        public string GetNickNameByAgentCode(string code)
+        {
+            using (var db = base.NewDB())
+            {
+                return db.Agents.Single(t => t.Code == code).User.UserProfile.NickName;
             }
         }
 

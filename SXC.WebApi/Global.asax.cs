@@ -17,6 +17,7 @@ namespace SXC.WebApi
             //var formatters = GlobalConfiguration.Configuration.Formatters;
             //formatters.XmlFormatter.SupportedMediaTypes.Clear();
             //formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
         }
     }
 }

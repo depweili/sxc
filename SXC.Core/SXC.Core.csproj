@@ -68,6 +68,7 @@
     <Compile Include="Mappings\StoreMap.cs" />
     <Compile Include="Mappings\TeacherMap.cs" />
     <Compile Include="Mappings\UserMap.cs" />
+    <Compile Include="Mappings\VideoMap.cs" />
     <Compile Include="Migrations\201708291538392_InitialCreate.cs" />
     <Compile Include="Migrations\201708291538392_InitialCreate.Designer.cs">
       <DependentUpon>201708291538392_InitialCreate.cs</DependentUpon>
@@ -124,6 +125,18 @@
     <Compile Include="Migrations\201709211413527_zs2.2.Designer.cs">
       <DependentUpon>201709211413527_zs2.2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709211514592_zs2.3.cs" />
+    <Compile Include="Migrations\201709211514592_zs2.3.Designer.cs">
+      <DependentUpon>201709211514592_zs2.3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709211518181_zs2.4.cs" />
+    <Compile Include="Migrations\201709211518181_zs2.4.Designer.cs">
+      <DependentUpon>201709211518181_zs2.4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201709280505463_zs2.5.cs" />
+    <Compile Include="Migrations\201709280505463_zs2.5.Designer.cs">
+      <DependentUpon>201709280505463_zs2.5.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Agent.cs" />
     <Compile Include="Models\Article.cs" />
@@ -137,6 +150,7 @@
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\Teacher.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Video.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +205,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709211413527_zs2.2.resx">
       <DependentUpon>201709211413527_zs2.2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709211514592_zs2.3.resx">
+      <DependentUpon>201709211514592_zs2.3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709211518181_zs2.4.resx">
+      <DependentUpon>201709211518181_zs2.4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709280505463_zs2.5.resx">
+      <DependentUpon>201709280505463_zs2.5.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

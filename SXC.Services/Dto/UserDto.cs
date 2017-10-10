@@ -40,6 +40,8 @@ namespace SXC.Services.Dto
     {
         public Guid authid { get; set; }
 
+        public string nickname { get; set; }
+
         public string realname { get; set; }
 
         public Nullable<int> gender { get; set; }

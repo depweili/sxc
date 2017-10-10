@@ -34,6 +34,8 @@ namespace SXC.Services.Impl
                 if (!File.Exists(imgPath))
                 {
                     imgPath = imgDir + "404Pic.png";
+
+                    mime = MimeMapping.GetMimeMapping(imgPath);
                 }
 
                 var imgByte = File.ReadAllBytes(imgPath);

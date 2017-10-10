@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace SXC.WebApi.Controllers
 {
-    public class IntegralController : ApiController
+    public class IntegralController : ApiControllerBase
     {
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace SXC.WebApi.Controllers
         /// <summary>
         /// 订单列表
         /// </summary>
-        /// <param name="orderdto"></param>
+        /// <param name="authid"></param>
         /// <returns></returns>
         [Route("api/Integral/UserOrders/{authid}")]
         [HttpGet]
@@ -251,7 +251,39 @@ namespace SXC.WebApi.Controllers
             return Ok(res);
         }
 
+        /// <summary>
+        /// 订单获取视频
+        /// </summary>
+        /// <param name="orderuid"></param>
+        /// <returns></returns>
+        [Route("api/Integral/UserOrders/Video/{orderuid}")]
+        [HttpGet]
+        public IHttpActionResult GetVideoByOrder(Guid orderuid)
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new StoreService();
+                var data = service.GetVideoByOrder(orderuid);
 
+                //if (!string.IsNullOrEmpty(data.message))
+                //{
+                //    res.code = "100";
+                //    res.msg = data.message;
+                //}
+
+                //res.resData = data.detail;
+
+                res.resData = data;
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+
+            }
+            return Ok(res);
+        }
 
     }
 }
