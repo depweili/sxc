@@ -3703,6 +3703,60 @@ SELECT * FROM temp");
             }
         }
 
+        [TestMethod]
+        public void TestRoll()
+        {
+            using (var db = new SxcDbContext())
+            {
+                var listprize = db.Lotterys.First().Prizes.Where(t => t.IsValid == true);
+
+                var ratearr = listprize.Select(t => t.WinRate).ToArray();
+
+
+                int[] tj = new int[8];
+
+                //Random r = new Random();
+                for(int i=0;i<100000;i++)
+                {
+                    var win = RollWinning(ratearr);
+
+                    tj[win]++;
+
+                    //Console.WriteLine(win + ":" + listprize.ElementAt(win).Name);
+                }
+
+                int k = 0;
+                foreach (var p in ratearr)
+                {
+                    Console.WriteLine(p + ":" + tj[k]);
+                    k++;
+                }
+                
+            }
+        }
+
+        private static Random rnd = new Random();
+
+        private int RollWinning(double[] prob)
+        {
+            int result = -1;
+            int n = (int)(prob.Sum() * 1000);           //计算概率总和，放大1000倍
+            Random r = rnd;
+            float x = (float)r.Next(0, n) / 1000;       //随机生成0~概率总和的数字
+
+            for (int i = 0; i < prob.Count(); i++)
+            {
+                double pre = prob.Take(i).Sum();         //区间下界
+                double next = prob.Take(i + 1).Sum();    //区间上界
+                if (x >= pre && x < next)               //如果在该区间范围内，就返回结果退出循环
+                {
+                    result = i;
+                    break;
+                }
+            }
+            return result;
+        }
+
 
     }
 }

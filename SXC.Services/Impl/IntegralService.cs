@@ -1,4 +1,5 @@
-﻿using SXC.Services.Business;
+﻿using SXC.Core.Models;
+using SXC.Services.Business;
 using SXC.Services.Dto;
 using System;
 using System.Collections.Generic;
@@ -92,5 +93,156 @@ namespace SXC.Services.Impl
                 return res;
             }
         }
+
+
+        public LotteryDto GetLottery1(Guid uid, int type)
+        {
+            using (var db = base.NewDB())
+            {
+                var list = new List<PrizeDto> { 
+                        new PrizeDto{ id=1,imgurl="https://www.hexieyinan.com/SxcWebApi/Images/Prize/1.jpg",name="奖品1"},
+                        new PrizeDto{ id=2,imgurl="https://www.hexieyinan.com/SxcWebApi/Images/Prize/2.jpg",name="奖品2"},
+                        new PrizeDto{ id=3,imgurl="https://www.hexieyinan.com/SxcWebApi/Images/Prize/3.jpg",name="奖品3"},
+                        new PrizeDto{ id=4,imgurl="https://www.hexieyinan.com/SxcWebApi/Images/Prize/4.jpg",name="奖品4"},
+                        new PrizeDto{ id=5,imgurl="https://www.hexieyinan.com/SxcWebApi/Images/Prize/5.jpg",name="奖品5"},
+                        new PrizeDto{ id=6,imgurl="https://www.hexieyinan.com/SxcWebApi/Images/Prize/6.jpg",name="奖品6"},
+                        new PrizeDto{ id=7,imgurl="https://www.hexieyinan.com/SxcWebApi/Images/Prize/7.jpg",name="奖品7"},
+                        new PrizeDto{ id=8,imgurl="https://www.hexieyinan.com/SxcWebApi/Images/Prize/8.jpg",name="奖品8"},
+                    };
+
+                var res = new LotteryDto
+                {
+                    id = 1,
+                    begintime = DateTime.Now.Date,
+                    endtime = DateTime.Now.Date.AddDays(1).AddSeconds(-1),
+                    chance = 3,
+                    isvalid = true,
+                    prizes = list.OrderBy(t=>Guid.NewGuid()).ToList()
+                };
+                return res;
+            }
+        }
+
+        public LotteryDto GetLottery(Guid uid, int type)
+        {
+            using (var db = base.NewDB())
+            {
+                var bus = new IntegralBus(db);
+
+                var dblottery = db.Lotterys.Single(t => t.IsValid == true && t.Type == type);
+
+                var dbuser = db.Users.Single(t => t.AuthID == uid);
+
+                var dbul = bus.GetUserLottery(dbuser, dblottery);
+
+                db.SaveChanges();
+
+                var res = new LotteryDto
+                {
+                    id = dbul.LotteryID,
+                    begintime = DateTime.Now.Date,
+                    endtime = DateTime.Now.Date.AddDays(1).AddSeconds(-1),
+                    chance = dbul.Chance,
+                    isvalid = dbul.IsValid,
+                    prizes = GetPrizeDtos(dblottery)
+                };
+                return res;
+            }
+        }
+
+        public List<PrizeDto> GetPrizeDtos(Lottery lo)
+        {
+            var list = lo.Prizes.Where(t => t.IsValid == true).Select(t => new { t.ID, t.Image, t.Name }).ToList();
+
+            var res = new List<PrizeDto>();
+
+            foreach (var p in list)
+            {
+                res.Add(new PrizeDto
+                {
+                    id = p.ID,
+                    name = p.Name,
+                    imgurl = Function.GetStaticPicUrl(p.Image, "Prize")
+                });
+            }
+
+            return res.OrderBy(t => Guid.NewGuid()).ToList();
+        }
+
+        public WinPrizeDto GetWinPrize(Guid uid,int lotteryid)
+        {
+            using (var db = base.NewDB())
+            {
+                var bus = new IntegralBus(db);
+
+                var res = new WinPrizeDto();
+
+                var dbuser = db.Users.Single(t => t.AuthID == uid);
+
+                var dbul = db.UserLotterys.Single(t => t.UserID == dbuser.ID && t.LotteryID == lotteryid);
+
+                if (dbul.Chance > 0)
+                {
+                    var winprize = bus.GetWinPrize(dbul);
+
+                    res.remainingchance = dbul.Chance;
+
+                    if (winprize != null)
+                    {
+                        res.prize = new PrizeDto
+                        {
+                            id = winprize.ID,
+                            name = winprize.Name
+                        };
+                        res.message = string.Empty;
+                    }
+                    else
+                    {
+                        res.prize = null;
+                        res.message = "未中奖";
+                    }
+                    
+                }
+                else
+                {
+                    res.remainingchance = 0;
+                    res.prize = null;
+                    res.message = "您的机会已经用完";
+                }
+
+                db.SaveChanges();
+
+                return res;
+            }
+            
+
+            //if (CheckLotteryChance(uid, lotteryid))
+            //{
+            //    res.remainingchance = 1;
+            //    res.prize = new PrizeDto
+            //    {
+            //        id = 4,
+            //        name = "奖品4"
+            //    };
+            //    res.message = string.Empty;
+            //}
+            //else
+            //{
+            //    res.remainingchance = 0;
+            //    res.prize = null;
+            //    res.message = "您的机会已经用完";
+            //}
+            //return res;
+
+        }
+
+        public bool CheckLotteryChance(Guid uid, int lotteryid)
+        {
+            Random rd = new Random((int)DateTime.Now.Ticks);
+            int num = rd.Next(0, 10);
+            return num > 5;
+        }
+
+
     }
 }

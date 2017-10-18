@@ -77,6 +77,7 @@
     <Compile Include="Dto\CourseDto.cs" />
     <Compile Include="Dto\IntegralDto.cs" />
     <Compile Include="Dto\NavDto.cs" />
+    <Compile Include="Dto\LotteryDto.cs" />
     <Compile Include="Dto\PromotionDto.cs" />
     <Compile Include="Dto\ReservationDto.cs" />
     <Compile Include="Dto\StoreDto.cs" />

@@ -151,7 +151,7 @@ namespace SXC.Code.Json
 
     #endregion
 
-    #region 数字小数位
+    #region 日期
     public class CommonDateTimeConverter : DateTimeConverterBase
     {
         private static IsoDateTimeConverter dtConverter = new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd HH:mm:ss" };

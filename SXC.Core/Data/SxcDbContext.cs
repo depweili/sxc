@@ -63,6 +63,16 @@ namespace SXC.Core.Data
         public DbSet<VideoInfo> VideoInfos { get; set; }
         public DbSet<CommodityVideoSeries> CommodityVideoSeries { get; set; }
 
+        ////////////////////////////
+
+        public DbSet<Lottery> Lotterys { get; set; }
+        public DbSet<UserLottery> UserLotterys { get; set; }
+        public DbSet<Prize> Prizes { get; set; }
+        public DbSet<Coupon> Coupons { get; set; }
+        public DbSet<LotteryRecord> LotteryRecords { get; set; }
+        public DbSet<UserCoupon> UserCoupons { get; set; }
+
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             string tbPrefix = ConfigHelper.GetConfig("tablePrefix");//ConfigurationManager.AppSettings["tablePrefix"];
@@ -103,7 +113,13 @@ namespace SXC.Core.Data
 
             modelBuilder.Configurations.Add(new VideoSeriesMap());
             modelBuilder.Configurations.Add(new VideoInfoMap());
+            //////////////////////////////////////////////
 
+            modelBuilder.Configurations.Add(new LotteryMap());
+            modelBuilder.Configurations.Add(new PrizeMap());
+            modelBuilder.Configurations.Add(new CouponMap());
+            modelBuilder.Configurations.Add(new LotteryRecordMap());
+            modelBuilder.Configurations.Add(new UserCouponMap());
 
             //////////////////////////////////////////////
 

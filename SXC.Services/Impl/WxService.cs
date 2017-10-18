@@ -148,7 +148,7 @@ namespace SXC.Services.Impl
         {
             using (var db = base.NewDB())
             {
-                var dblist = db.Promotions.Where(t => t.IsValid == true && t.Type == type).OrderBy(t => t.BeginTime).ToList();
+                var dblist = db.Promotions.Where(t => t.IsValid == true && t.Type == type).OrderByDescending(t => t.CreateTime).ToList();
 
                 var res = new List<PromotionDto>();
                 foreach (var item in dblist)

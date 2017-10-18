@@ -13,6 +13,8 @@ namespace SXC.Services
 {
     public static class Function
     {
+        public static Random random = new Random();
+
         public static string GetHostAndApp()
         {
 
@@ -43,10 +45,16 @@ namespace SXC.Services
            
         }
 
-        public static string GetStaticPicUrl(string pic)
+        public static string GetStaticPicUrl(string pic,string subdir=null)
         {
             var host = GetHostAndApp();
-            var url = host + @"/Images/" + pic;
+            var url = host + @"/Images/";
+            if (!string.IsNullOrEmpty(subdir))
+            {
+                url += subdir + "/";
+            }
+            url += pic;
+
             return url;
         }
 

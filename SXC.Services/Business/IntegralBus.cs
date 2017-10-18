@@ -1,7 +1,9 @@
 ﻿using SXC.Core.Data;
 using SXC.Core.Models;
+using SXC.Services.Dto;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,7 +49,12 @@ namespace SXC.Services.Business
                     
                     if (record.Points > 0)
                     {
-                        record.UserIntegral.IntegralUserActivitys.FirstOrDefault(t => t.IntegralActivity == record.IntegralActivity).TotalPoints += record.Points;
+                        var iua = record.UserIntegral.IntegralUserActivitys.FirstOrDefault(t => t.IntegralActivity == record.IntegralActivity);
+                        if (iua != null)
+                        {
+                            iua.TotalPoints += record.Points;
+                        }
+
                         record.UserIntegral.TotalPoints += record.Points;
                         record.ValidPoints = record.Points;
                     }
@@ -168,26 +175,36 @@ namespace SXC.Services.Business
             {
                 var activity = _context.IntegralActivitys.FirstOrDefault(t => t.Name == activityname);
 
-                var rule = activity.IntegralRule;
-
-                var useractivity = ui.IntegralUserActivitys.FirstOrDefault(t => t.IntegralActivityID == activity.ID);
-
-                if (useractivity == null)
+                if(activity!=null)
                 {
-                    //_context.IntegralUserActivitys.
+                    //var rule = activity.IntegralRule;
 
-                    ui.IntegralUserActivitys.Add(new IntegralUserActivity
+                    var useractivity = ui.IntegralUserActivitys.FirstOrDefault(t => t.IntegralActivityID == activity.ID);
+
+                    if (useractivity == null)
                     {
-                        IntegralActivity = activity
-                    });
+                        //_context.IntegralUserActivitys.
+
+                        ui.IntegralUserActivitys.Add(new IntegralUserActivity
+                        {
+                            IntegralActivity = activity
+                        });
+                    }
                 }
 
+
+                var mark = activityname;
+
+                if (string.IsNullOrEmpty(mark))
+                {
+                    mark = extdata.ShortMark;
+                }
 
                 IntegralRecord res = new IntegralRecord
                 {
                     IntegralActivity = activity,
                     UserIntegral = ui,
-                    ShortMark = activityname,
+                    ShortMark = mark,//activityname,
                     Points = GetPoints(ui, activity, extdata)
                     //Content = BuildRecordContent(activityname, extdata)
                 };
@@ -204,6 +221,12 @@ namespace SXC.Services.Business
         private int GetPoints(UserIntegral ui, IntegralActivity activity, dynamic extdata)
         {
             int res = 0;
+
+            if (activity == null)
+            {
+                return extdata.Points;
+            }
+
             if (activity.Name == "每日签到")
             {
                 return GetDailySignInPoints(ui, activity);
@@ -287,5 +310,135 @@ namespace SXC.Services.Business
                 throw;
             }
         }
+
+
+        public UserLottery GetUserLottery(User user, Lottery lo)
+        {
+            var ul = _context.UserLotterys.FirstOrDefault(t => t.UserID == user.ID && t.LotteryID == lo.ID);
+
+            if (ul == null)
+            {
+                ul = _context.UserLotterys.Add(new UserLottery
+                {
+                    Lottery = lo,
+                    User = user,
+                    Chance = GetUserLotteryInitChance(user, lo)
+                });
+            }
+            else
+            {
+                if (ul.LastTime.Date != DateTime.Now.Date)
+                {
+                    ul.Chance = GetUserLotteryInitChance(user, lo);
+                    ul.LastTime = DateTime.Now;
+                }
+            }
+
+            return ul;
+        }
+
+        public int GetUserLotteryInitChance(User user, Lottery lo)
+        {
+            return lo.Chance;
+        }
+
+        public Prize GetWinPrize(UserLottery ul)
+        {
+            Prize winprize = null;
+
+            ul.Chance--;
+
+            //var listprize = ul.Lottery.Prizes.Where(t => t.IsValid == true).Select(t => new { t.ID, t.Name, t.WinRate, t.Points, t.CouponID }).ToList();
+            
+            var listprize = ul.Lottery.Prizes.Where(t => t.IsValid == true);
+
+            var ratearr = listprize.Select(t => t.WinRate).ToArray();
+
+            var win = RollWinning(ratearr);
+
+            if (win >= 0)
+            {
+                winprize = listprize.ElementAt(win);
+            }
+
+            if (winprize != null)
+            {
+                LotteryProcess(ul, winprize);
+            }
+
+
+            //_context.LotteryRecords.Add(new LotteryRecord
+            //{
+            //    LotteryID = ul.LotteryID,
+            //    UserID = ul.UserID,
+            //    Prize = winprize
+            //});
+
+            //if (winprize.Type == 0 && winprize.Points>0)
+            //{
+            //    dynamic extdata = new ExpandoObject();
+
+            //    extdata.Points = winprize.Points;
+            //    extdata.ShortMark = winprize.Lottery.Name;//"抽奖";
+
+            //    var res = IntegralProcess(ul.User.UserIntegral, null, extdata);
+            //}
+
+            return winprize;
+        }
+
+        public void LotteryProcess(UserLottery ul,Prize winprize)
+        {
+            _context.LotteryRecords.Add(new LotteryRecord
+            {
+                LotteryID = ul.LotteryID,
+                UserID = ul.UserID,
+                Prize = winprize
+            });
+
+            if (winprize.Type == 0 && winprize.Points > 0)
+            {
+                dynamic extdata = new ExpandoObject();
+
+                extdata.Points = winprize.Points;
+                extdata.ShortMark = winprize.Lottery.Name;//"抽奖";
+
+                var res = IntegralProcess(ul.User.UserIntegral, null, extdata);
+            }
+            else
+            {
+                if (winprize.Type == 1 && winprize.Coupon != null)
+                {
+                    var uc = new UserCoupon();
+
+                    uc.Coupon = winprize.Coupon;
+                    uc.User = ul.User;
+                    uc.ExpiredTime = winprize.Coupon.ExpiredTime ?? DateTime.Now.AddDays(winprize.Coupon.ValidDays ?? 30);
+
+                    uc = _context.UserCoupons.Add(uc);
+                }
+            }
+        }
+
+        private int RollWinning(double[] prob)
+        {
+            int result = -1;
+            int n = (int)(prob.Sum() * 1000);           //计算概率总和，放大1000倍
+            Random r = Function.random;
+            float x = (float)r.Next(0, n) / 1000;       //随机生成0~概率总和的数字
+
+            for (int i = 0; i < prob.Count(); i++)
+            {
+                double pre = prob.Take(i).Sum();         //区间下界
+                double next = prob.Take(i + 1).Sum();    //区间上界
+                if (x >= pre && x < next)               //如果在该区间范围内，就返回结果退出循环
+                {
+                    result = i;
+                    break;
+                }
+            }
+            return result;
+        }
+
     }
 }

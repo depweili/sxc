@@ -285,5 +285,59 @@ namespace SXC.WebApi.Controllers
             return Ok(res);
         }
 
+        /// <summary>
+        /// 获取抽奖信息
+        /// </summary>
+        /// <param name="authid"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        [Route("api/Lottery")]
+        [HttpGet]
+        public IHttpActionResult GetLottery(Guid authid, int type = 0)
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new IntegralService();
+                var data = service.GetLottery(authid, type);
+
+                res.resData = data;
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+
+            }
+            return Ok(res);
+        }
+
+        /// <summary>
+        /// 摇奖
+        /// </summary>
+        /// <param name="authid"></param>
+        /// <param name="lotteryid"></param>
+        /// <returns></returns>
+        [Route("api/Lottery/Roll")]
+        [HttpGet]
+        public IHttpActionResult GetWinPrize(Guid authid, int lotteryid)
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new IntegralService();
+                var data = service.GetWinPrize(authid, lotteryid);
+
+                res.resData = data;
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+
+            }
+            return Ok(res);
+        }
+
     }
 }
