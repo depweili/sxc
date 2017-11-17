@@ -88,6 +88,9 @@ namespace SXC.Core.Models
         //public virtual ICollection<Commodity> CommodityGallerys { get; set; }
 
         public virtual ICollection<CommodityVideoSeries> CommodityVideoSeries { get; set; }
+
+        public int? ArticleID { get; set; }
+        public virtual Article Article { get; set; }
     }
 
     public class CommodityGallery

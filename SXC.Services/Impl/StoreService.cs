@@ -71,7 +71,8 @@ namespace SXC.Services.Impl
                     isvalid = dbitem.IsValid,
                     stock = dbitem.Stock,
                     isreal = dbitem.IsReal ?? true,
-                    detailAttrs = GetAttrs(dbitem.Details)
+                    detailAttrs = GetAttrs(dbitem.Details),
+                    articleid = dbitem.ArticleID
                 };
 
                 return res;

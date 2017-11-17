@@ -13,6 +13,8 @@ namespace SXC.Services.Dto
     {
         public int id { get; set; }
 
+        public int costpoints { get; set; }
+
         public int chance { get; set; }
 
         [JsonConverter(typeof(CommonDateTimeConverter))]

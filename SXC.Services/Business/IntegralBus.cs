@@ -348,6 +348,16 @@ namespace SXC.Services.Business
 
             ul.Chance--;
 
+            if(ul.Lottery.CostPoints>0)
+            {
+                dynamic extdata = new ExpandoObject();
+
+                extdata.Points = -ul.Lottery.CostPoints;
+                extdata.ShortMark = ul.Lottery.Name;//"抽奖";
+
+                var res = IntegralProcess(ul.User.UserIntegral, null, extdata);
+            }
+
             //var listprize = ul.Lottery.Prizes.Where(t => t.IsValid == true).Select(t => new { t.ID, t.Name, t.WinRate, t.Points, t.CouponID }).ToList();
             
             var listprize = ul.Lottery.Prizes.Where(t => t.IsValid == true);
@@ -401,7 +411,7 @@ namespace SXC.Services.Business
                 dynamic extdata = new ExpandoObject();
 
                 extdata.Points = winprize.Points;
-                extdata.ShortMark = winprize.Lottery.Name;//"抽奖";
+                extdata.ShortMark = winprize.Lottery.Name + "奖励";//"抽奖";
 
                 var res = IntegralProcess(ul.User.UserIntegral, null, extdata);
             }

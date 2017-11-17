@@ -41,6 +41,8 @@ namespace SXC.Services.Dto
         public Nullable<bool> isvalid { get; set; }
 
         public List<CommodityAttrDto> detailAttrs { get; set; }
+
+        public int? articleid { get; set; }
     }
 
     public class CommodityDto

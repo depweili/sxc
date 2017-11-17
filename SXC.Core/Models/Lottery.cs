@@ -16,6 +16,8 @@ namespace SXC.Core.Models
 
         public int Chance { get; set; }
 
+        public int CostPoints { get; set; }
+
         public string Name { get; set; }
 
         public bool? IsValid { get; set; }

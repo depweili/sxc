@@ -142,6 +142,7 @@ namespace SXC.Services.Impl
                     id = dbul.LotteryID,
                     begintime = DateTime.Now.Date,
                     endtime = DateTime.Now.Date.AddDays(1).AddSeconds(-1),
+                    costpoints = dblottery.CostPoints,
                     chance = dbul.Chance,
                     isvalid = dbul.IsValid,
                     prizes = GetPrizeDtos(dblottery)
@@ -179,7 +180,22 @@ namespace SXC.Services.Impl
 
                 var dbuser = db.Users.Single(t => t.AuthID == uid);
 
+                var dbui = dbuser.UserIntegral;
+
+                var dblo = db.Lotterys.Single(t => t.ID == lotteryid);
+
                 var dbul = db.UserLotterys.Single(t => t.UserID == dbuser.ID && t.LotteryID == lotteryid);
+
+                if (dbui.CurrentPoints < dblo.CostPoints)
+                {
+                    res.remainingchance = dbul.Chance;
+                    res.prize = null;
+                    res.message = "您的积分不足";
+
+                    return res;
+
+                    //throw new Exception("您的积分不足");
+                }
 
                 if (dbul.Chance > 0)
                 {
