@@ -31,11 +31,11 @@ namespace SXC.Services.Impl
             return Function.GetPicUrl(pic);
         }
 
-        public List<NavDto> GetNavigations()
+        public List<NavDto> GetNavigations(int type)
         {
             using (var db = base.NewDB())
             {
-                var dblist = db.Navigations.Where(t => t.IsValid == true).OrderBy(t => t.Order).ToList();
+                var dblist = db.Navigations.Where(t => t.IsValid == true && t.Type == type).OrderBy(t => t.Order).ToList();
 
                 var res = new List<NavDto>();
                 foreach (var item in dblist)
