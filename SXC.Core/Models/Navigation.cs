@@ -17,6 +17,8 @@ namespace SXC.Core.Models
 
         public int ID { get; set; }
 
+        public int Type { get; set; }
+
         public string Desc { get; set; }
 
         public string Pic { get; set; }

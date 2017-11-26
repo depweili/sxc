@@ -9,7 +9,7 @@ using SXC.Code.Extensions;
 
 namespace SXC.Core.Mappings
 {
-    class AgentMap : EntityTypeConfiguration<Agent>
+    public class AgentMap : EntityTypeConfiguration<Agent>
     {
         public AgentMap()
         {
@@ -19,6 +19,39 @@ namespace SXC.Core.Mappings
             this.HasOptional(t => t.ParentAgent).WithMany(t => t.ChildAgents).HasForeignKey(t => t.PID);
 
             this.HasRequired(t => t.User).WithRequiredDependent(t => t.Agent);
+        }
+    }
+
+    public class UserPaymentMap : EntityTypeConfiguration<UserPayment>
+    {
+        public UserPaymentMap()
+        {
+            this.Property(t => t.PaySN).HasMaxLength(20).IsUnique();
+            this.Property(t => t.Memo).HasMaxLength(50);
+            this.Property(t => t.Amount).HasColumnType("MONEY");
+            this.Property(t => t.DistrAmount).HasColumnType("MONEY");
+            this.Property(t => t.Commission).HasColumnType("MONEY");
+            this.Property(t => t.FinalAmount).HasColumnType("MONEY");
+
+            this.Property(t => t.OperatorID).HasMaxLength(20);
+            this.Property(t => t.OperatorName).HasMaxLength(10);
+
+        }
+    }
+
+    public class CommissionRecordMap : EntityTypeConfiguration<CommissionRecord>
+    {
+        public CommissionRecordMap()
+        {
+            this.Property(t => t.Memo).HasMaxLength(50);
+        }
+    }
+
+    public class PaymentItemMap : EntityTypeConfiguration<PaymentItem>
+    {
+        public PaymentItemMap()
+        {
+            this.Property(t => t.Name).HasMaxLength(20);
         }
     }
 }

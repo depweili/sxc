@@ -71,7 +71,12 @@ namespace SXC.Core.Data
         public DbSet<Coupon> Coupons { get; set; }
         public DbSet<LotteryRecord> LotteryRecords { get; set; }
         public DbSet<UserCoupon> UserCoupons { get; set; }
+        ////////////////////
 
+
+        public DbSet<UserPayment> UserPayments { get; set; }
+        public DbSet<CommissionRecord> CommissionRecords { get; set; }
+        public DbSet<PaymentItem> PaymentItems { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -120,6 +125,11 @@ namespace SXC.Core.Data
             modelBuilder.Configurations.Add(new CouponMap());
             modelBuilder.Configurations.Add(new LotteryRecordMap());
             modelBuilder.Configurations.Add(new UserCouponMap());
+
+            //////////////////////////////////////////////
+            modelBuilder.Configurations.Add(new UserPaymentMap());
+            modelBuilder.Configurations.Add(new CommissionRecordMap());
+            modelBuilder.Configurations.Add(new PaymentItemMap());
 
             //////////////////////////////////////////////
 

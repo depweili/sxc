@@ -9,6 +9,8 @@ namespace SXC.Core
     public class Constant
     {
         public static readonly string SNPREFIX_ORDER = "100";
+
+        public static readonly string SNPREFIX_PAYMENT = "800";
     }
 
 }
