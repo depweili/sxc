@@ -24,13 +24,13 @@ namespace SXC.WebApi.Controllers
         /// <returns></returns>
         [Route("api/Navigations")]
         [HttpGet]
-        public IHttpActionResult GetNavigations()
+        public IHttpActionResult GetNavigations(int type = 0)
         {
             var res = new ResponseBase();
             try
             {
                 var service = new WxService();
-                var data = service.GetNavigations();
+                var data = service.GetNavigations(type);
 
                 res.resData = data;
             }
