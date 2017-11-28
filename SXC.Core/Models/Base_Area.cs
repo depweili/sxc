@@ -10,7 +10,7 @@ namespace SXC.Core.Models
     {
         public int ID { get; set; }
 
-        public int PID { get; set; }
+        public int? PID { get; set; }
 
         public int Type { get; set; }
 
@@ -19,6 +19,10 @@ namespace SXC.Core.Models
         public int Level { get; set; }
         
         public string Code { get; set; }
+
+        public string PCode { get; set; }
+
+        public string Area { get; set; }
 
         //public string ZipCode { get; set; }
 

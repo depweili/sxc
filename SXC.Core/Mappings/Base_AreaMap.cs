@@ -14,6 +14,8 @@ namespace SXC.Core.Mappings
         {
             this.Property(t => t.Name).HasMaxLength(20);
             this.Property(t => t.Code).HasMaxLength(20);
+            this.Property(t => t.PCode).HasMaxLength(20);
+            this.Property(t => t.Area).HasMaxLength(100);
         }
     }
 }
