@@ -17,6 +17,7 @@ namespace SXC.Core.Mappings
         {
             this.Property(t => t.UserName).HasMaxLength(50);
             this.Property(t => t.Password).HasMaxLength(50);
+            this.Property(t => t.SystemAccount).HasMaxLength(50);
         }
     }
 

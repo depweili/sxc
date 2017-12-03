@@ -174,6 +174,14 @@
     <Compile Include="Migrations\201711281317151_zs3.4.Designer.cs">
       <DependentUpon>201711281317151_zs3.4.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712010722437_zs3.5.cs" />
+    <Compile Include="Migrations\201712010722437_zs3.5.Designer.cs">
+      <DependentUpon>201712010722437_zs3.5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201712030508015_zs3.6.cs" />
+    <Compile Include="Migrations\201712030508015_zs3.6.Designer.cs">
+      <DependentUpon>201712030508015_zs3.6.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Agent.cs" />
     <Compile Include="Models\Article.cs" />
@@ -279,6 +287,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711281317151_zs3.4.resx">
       <DependentUpon>201711281317151_zs3.4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712010722437_zs3.5.resx">
+      <DependentUpon>201712010722437_zs3.5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712030508015_zs3.6.resx">
+      <DependentUpon>201712030508015_zs3.6.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

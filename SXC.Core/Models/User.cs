@@ -30,6 +30,8 @@ namespace SXC.Core.Models
 
         public DateTime CreateTime { get; set; }
 
+        public string SystemAccount { get; set; }
+
         public virtual UserProfile UserProfile { get; set; }
 
         public virtual Agent Agent { get; set; }

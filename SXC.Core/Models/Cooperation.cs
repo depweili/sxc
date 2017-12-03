@@ -31,7 +31,7 @@ namespace SXC.Core.Models
 
         public string Memo { get; set; }
 
-        //public int State { get; set; }
+        public int State { get; set; }
 
         public string ProcessDetail { get; set; }
 
