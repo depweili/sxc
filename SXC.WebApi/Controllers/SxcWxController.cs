@@ -393,6 +393,32 @@ namespace SXC.WebApi.Controllers
         }
 
         /// <summary>
+        /// 代理佣金记录
+        /// </summary>
+        /// <param name="authid"></param>
+        /// <returns></returns>
+        [Route("api/UserCommission/{authid}")]
+        [HttpGet]
+        public IHttpActionResult GetUserCommission(Guid authid)
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                var data = service.GetUserCommission(authid);
+
+                res.resData = data;
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+            }
+            return Ok(res);
+            //return Json(res);
+        }
+
+        /// <summary>
         /// 上级代理绑定
         /// </summary>
         /// <param name="req"></param>

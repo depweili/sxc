@@ -720,6 +720,30 @@ namespace SXC.Services.Impl
             }
         }
 
+        public List<CommissionRecordDto> GetUserCommission(Guid authid)
+        {
+            using (var db = base.NewDB())
+            {
+
+                var dblist = db.CommissionRecords.Include(t=>t.UserPayment.User.UserProfile).Where(t => t.Agent.User.AuthID == authid).OrderByDescending(t => t.ID);
+
+                var res = new List<CommissionRecordDto>();
+                foreach (var item in dblist)
+                {
+                    res.Add(new CommissionRecordDto
+                    {
+                        ID = item.ID,
+                        Commission = item.Commission,
+                        CreateTime = item.CreateTime,
+                        Memo = item.Memo,
+                        PayUser = string.Format(@"{0}[{1}]", item.UserPayment.User.UserProfile.NickName, item.UserPayment.User.UserProfile.RealName)
+                    });
+                }
+                return res;
+            }
+        }
+
+
         
 
     }

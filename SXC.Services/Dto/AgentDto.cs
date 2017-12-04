@@ -30,4 +30,19 @@ namespace SXC.Services.Dto
 
         public Guid authid { get; set; }
     }
+
+    public class CommissionRecordDto
+    {
+        public int ID { get; set; }
+
+        public decimal Commission { get; set; }
+
+        public string PayUser { get; set; }
+
+        [JsonConverter(typeof(CommonDateTimeConverter))]
+        public DateTime CreateTime { get; set; }
+
+        public string Memo { get; set; }
+
+    }
 }
