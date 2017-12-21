@@ -611,6 +611,55 @@ namespace SXC.Services.Impl
             }
         }
 
+        public dynamic GetAgentRelationship(string agentcode)
+        {
+            using (var db = base.NewDB())
+            {
+                var current = db.Agents.FirstOrDefault(t => t.Code == agentcode);
+
+                var childlist = current.ChildAgents.Select(t => new { t.ID, t.Level, t.Type, t.SupAgentBindTime });
+
+                var parent = current.ParentAgent;
+
+                var parentdto = new object() { };
+
+                if(parent!=null)
+                {
+                    parentdto = new
+                    {
+
+                        avatarUrl = parent.User.UserProfile.AvatarUrl,
+                        nickname = parent.User.UserProfile.NickName,
+                        realname = parent.User.UserProfile.RealName,
+                        mobilePhone = parent.User.UserProfile.MobilePhone,
+                        level = parent.Level,
+                        type = parent.Type,
+                    };
+                }
+                
+
+                var dblist = from a in childlist
+                             join u in db.UserProfiles
+                             on a.ID equals u.ID
+                             select new
+                             {
+                                 avatarUrl = u.AvatarUrl,
+                                 nickname = u.NickName,
+                                 realname = u.RealName,
+                                 mobilePhone = u.MobilePhone,
+                                 supagentbindTime = a.SupAgentBindTime,
+                                 type = a.Type,
+                                 level = a.Level
+                             };
+
+                //dynamic res = dblist.ToList();
+
+                dynamic res = new { sup = parentdto, sub = dblist.ToList() };
+
+                return res;
+            }
+        }
+
         public AgentDto GetUserAgent(Guid authid)
         {
             using (var db = base.NewDB())

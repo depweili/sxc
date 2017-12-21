@@ -485,6 +485,33 @@ namespace SXC.WebApi.Controllers
             return Ok(res);
         }
 
+        /// <summary>
+        /// 获取代理上下级信息
+        /// </summary>
+        /// <param name="agentcode"></param>
+        /// <returns></returns>
+        [Route("api/Agent/Relationship/{agentcode}")]
+        [HttpGet]
+        public IHttpActionResult GetAgentRelationship(string agentcode)
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                dynamic data = service.GetAgentRelationship(agentcode);
+
+                res.resData = data;
+                //res.resData = JsonConvert.DeserializeObject(data);
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+            }
+
+            return Ok(res);
+        }
+
 
         /// <summary>
         /// 获取代理二维码
