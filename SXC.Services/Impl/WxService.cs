@@ -244,7 +244,7 @@ namespace SXC.Services.Impl
                     if (dbitem == null)
                     {
                         User user = new User();
-                        db.Users.Add(user);
+                        user = db.Users.Add(user);
                         //db.SaveChanges();
 
                         UserProfile userpf = new UserProfile { 
@@ -290,6 +290,13 @@ namespace SXC.Services.Impl
                                 {
                                     var bus = new IntegralBus(db);
                                     bus.IntegralProcess(shareui, "分享有礼", user);
+
+                                    //分享直接成为上级
+                                    var shareagent = shareui.User.Agent;
+                                    if(shareagent.IsValid??false)
+                                    {
+                                        agent.ParentAgent = shareui.User.Agent;
+                                    }
                                 }
                             }
                         }
@@ -488,13 +495,22 @@ namespace SXC.Services.Impl
                     if (user != null)
                     {
                         var userpf = user.UserProfile;
-                        userpf.RealName = userpfdto.realname;
-                        userpf.Gender = userpfdto.gender;
-                        userpf.Address = userpfdto.address;
-                        userpf.IDCard = userpfdto.idcard;
-                        userpf.MobilePhone = userpfdto.mobilephone;
 
-                        db.SaveChanges();
+                        if (!(userpf.IsVerified ?? false))
+                        {
+                            userpf.RealName = userpfdto.realname;
+                            userpf.Gender = userpfdto.gender;
+                            userpf.Address = userpfdto.address;
+                            userpf.IDCard = userpfdto.idcard;
+                            userpf.MobilePhone = userpfdto.mobilephone;
+
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            return "已经验证，不可修改";
+                        }
+                        
 
                         return string.Empty;
                     }
