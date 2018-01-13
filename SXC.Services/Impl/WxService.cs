@@ -159,6 +159,7 @@ namespace SXC.Services.Impl
                         name = item.Name,
                         desc = item.Desc,
                         picurl = GetPicUrl(item.Pic),
+                        date = item.CreateTime,
                         //articleid = item.Article == null ? IntNull : item.Article.ID
                         articleid = item.ArticleID
                     });
@@ -538,9 +539,15 @@ namespace SXC.Services.Impl
                     return "当前用户信息缺失或无效";
                 }
 
-                if (user.Agent == null || user.Agent.IsValid == false)
+                //if (user.Agent == null || user.Agent.IsValid == false)
+                //{
+                //    return "当前用户代理缺失或无效";
+                //}
+
+                //当前无效但是可以添加上级
+                if (user.Agent == null )
                 {
-                    return "当前用户代理缺失或无效";
+                    return "当前用户代理缺失";
                 }
 
                 if (user.Agent.PID != null)

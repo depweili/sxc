@@ -16,6 +16,8 @@ namespace SXC.Services.Dto
 
         public string desc { get; set; }
 
+        public DateTime? date { get; set; }
+
         public int? articleid { get; set; }
     }
 }
