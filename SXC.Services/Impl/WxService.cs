@@ -670,9 +670,9 @@ namespace SXC.Services.Impl
             }
         }
 
-        public dynamic GetAgentTypeInfo(int type,int level)
+        public AgentTypeDto GetAgentTypeInfo(int type, int level)
         {
-            var res = new { typedesc = "无", leveldesc = "无" };
+            var res = new AgentTypeDto { typedesc = "无", leveldesc = "无" };
             try
             {
                 if (type > 0 && level > 0)
@@ -692,7 +692,7 @@ namespace SXC.Services.Impl
 
                     var item = data.Where(t => t.typeid == type.ToString() && t.levelid == level.ToString()).Single();
 
-                    res = new { typedesc = item.typedesc, leveldesc = item.leveldesc };
+                    res = item;
                 }
 
                 return res;
@@ -736,7 +736,8 @@ namespace SXC.Services.Impl
                         realname = parent.User.UserProfile.RealName,
                         mobilePhone = parent.User.UserProfile.MobilePhone,
                         level = parent.Level,
-                        type = parent.Type,
+                        type = parent.Type
+
                     };
                 }
                 
