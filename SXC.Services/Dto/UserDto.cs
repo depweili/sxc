@@ -52,5 +52,7 @@ namespace SXC.Services.Dto
 
         public string address { get; set; }
 
+        public bool isverified { get; set; }
+
     }
 }

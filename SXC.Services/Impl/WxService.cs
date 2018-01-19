@@ -508,7 +508,8 @@ namespace SXC.Services.Impl
                         gender = userpf.Gender,
                         address = userpf.Address,
                         idcard = userpf.IDCard,
-                        mobilephone = userpf.MobilePhone
+                        mobilephone = userpf.MobilePhone,
+                        isverified=userpf.IsVerified??false
                     };
 
                     return userpfdto;
