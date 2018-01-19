@@ -181,7 +181,32 @@ namespace SXC.WebApi.Controllers
             try
             {
                 var service = new WxService();
-                var data = service.GetPromotions();
+                var data = service.GetPromotions(0);
+
+                res.resData = data;
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+
+            }
+            return Ok(res);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        [Route("api/Promotions/Top")]
+        [HttpGet]
+        public IHttpActionResult GetPromotionsTop(int type=0,int? top=null)
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                var data = service.GetPromotions(type,top);
 
                 res.resData = data;
             }

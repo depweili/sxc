@@ -19,6 +19,8 @@ namespace SXC.Core.Mappings
             this.HasOptional(t => t.ParentAgent).WithMany(t => t.ChildAgents).HasForeignKey(t => t.PID);
 
             this.HasRequired(t => t.User).WithRequiredDependent(t => t.Agent);
+
+            this.HasOptional(t => t.Area).WithMany().HasForeignKey(t=>t.Area_ID);
         }
     }
 

@@ -9,6 +9,9 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using SXC.Services.Dto;
 using Newtonsoft.Json;
+using System.Xml.Linq;
+using SXC.Code.Cache;
+using System.Linq;
 
 namespace UnitTestProject1
 {
@@ -20,7 +23,7 @@ namespace UnitTestProject1
         {
             var AesIV = "r7BXXKkLb8qrSNn05n0qiA==";
             var AesKey = "tiihtNczf5v6AKRyjwEUhQ==";
-            string text ="CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZM" +
+            string text = "CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZM" +
     "QmRzooG2xrDcvSnxIMXFufNstNGTyaGS" +
     "9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+" +
     "3hVbJSRgv+4lGOETKUQz6OYStslQ142d" +
@@ -85,7 +88,7 @@ namespace UnitTestProject1
                 string key = GetUniqueKey(8);
                 Console.WriteLine(key);
             }
-            
+
         }
 
         public static string GetUniqueKey(int size)
@@ -119,7 +122,7 @@ namespace UnitTestProject1
             img.Save(@"D:\code\Projects\速星创\server\SXC\SXC.WebApi\Images\sxclogonew1.png", ImageFormat.Png);
 
             //img.Dispose();
-            
+
         }
 
         public static Image resizeImage(Image imgToResize, Size size)
@@ -167,7 +170,99 @@ namespace UnitTestProject1
             string json = JsonConvert.SerializeObject(t);
         }
 
-        
+
+        [TestMethod]
+        public void CreateAgentXml()
+        {
+
+            var doc = new XDocument(
+                new XElement("AgentTypes",
+                    new XElement("AgentType",new XAttribute("id", "1"),new XAttribute("desc", "直辖市代理"),
+                        new XElement("AgentLevel", new XAttribute("id", "1"),new XAttribute("desc", "特级代理")),
+                        new XElement("AgentLevel", new XAttribute("id", "2"),new XAttribute("desc", "高级代理")),
+                        new XElement("AgentLevel", new XAttribute("id", "3"),new XAttribute("desc", "中级代理")),
+                        new XElement("AgentLevel", new XAttribute("id", "4"), new XAttribute("desc", "初级代理"))
+                        //new XElement("AgentLevel", new XText("asdasdad"))
+                    ),
+                    new XElement("AgentType", new XAttribute("id", "2"), new XAttribute("desc", "非直辖市代理"),
+                        new XElement("AgentLevel", new XAttribute("id", "1"), new XAttribute("desc", "省级代理")),
+                        new XElement("AgentLevel", new XAttribute("id", "2"), new XAttribute("desc", "市级代理")),
+                        new XElement("AgentLevel", new XAttribute("id", "3"), new XAttribute("desc", "县级代理")),
+                        new XElement("AgentLevel", new XAttribute("id", "4"), new XAttribute("desc", "个人代理"))
+                    ),
+                    new XElement("AgentType", new XAttribute("id", "3"), new XAttribute("desc", "直属代理"),
+                        new XElement("AgentLevel", new XAttribute("id", "1"), new XAttribute("desc", "总监")),
+                        new XElement("AgentLevel", new XAttribute("id", "2"), new XAttribute("desc", "主管")),
+                        new XElement("AgentLevel", new XAttribute("id", "3"), new XAttribute("desc", "员工")),
+                        new XElement("AgentLevel", new XAttribute("id", "4"), new XAttribute("desc", "个人代理"))
+                    )
+                )
+            );
+            doc.Save("AgentTypes.xml");
+        }
+
+        [TestMethod]
+        public void LoadAgentXml()
+        {
+            try
+            {
+                string key = "AgentTypes.xml";
+                var doc = new XDocument();
+                if (CacheHelper.Exist(key))
+                {
+                    doc = CacheHelper.Get<XDocument>(key);
+                }
+                else
+                {
+                    doc = XDocument.Load("AgentTypes.xml");
+                    CacheHelper.Set(key, doc);
+                }
+                var data = doc.Descendants("AgentType").Select(t => new { id = t.Attribute("id").Value, desc = t.Attribute("desc").Value, levels = t.Elements().Select(x => new { id = x.Attribute("id").Value, desc = x.Attribute("desc").Value,}) });
+
+                foreach (var i in data)
+                {
+                    Console.WriteLine("id:" + i.id + " desc;" + i.desc);
+                    foreach (var p in i.levels)
+                    {
+                        Console.WriteLine("id:" + p.id + " desc;" + p.desc);
+                    }
+                }
+
+                //var data1 = doc.Descendants("AgentLevel").Select(t => new { id = t.Attribute("id").Value, desc = t.Attribute("desc").Value, pid=t.Ancestors().First().Attribute("id").Value,pdesc=t.Ancestors().First().Attribute("desc").Value});
+
+                dynamic data1;
+
+                if (CacheHelper.Exist("AgentTypesData"))
+                {
+                    data1 = CacheHelper.Get<dynamic>("AgentTypesData");
+                }
+                else
+                {
+                    data1 = doc.Descendants("AgentLevel").Select(t => new { id = t.Attribute("id").Value, desc = t.Attribute("desc").Value, pid = t.Ancestors().First().Attribute("id").Value, pdesc = t.Ancestors().First().Attribute("desc").Value });
+                    CacheHelper.Set("AgentTypesData", data1);
+                }
+
+                if (CacheHelper.Exist("AgentTypesData"))
+                {
+                    data1 = CacheHelper.Get<dynamic>("AgentTypesData");
+                }
+
+                foreach (var i in data1)
+                {
+                    Console.WriteLine("id:" + i.id + " desc;" + i.desc + "id:" + i.pid + " desc;" + i.pdesc);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                
+                throw ex;
+            }
+            
+
+
+
+        }
     }
 
 

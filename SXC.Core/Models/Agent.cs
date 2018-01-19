@@ -2,6 +2,7 @@
 using SXC.Code.Utility;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,6 +45,8 @@ namespace SXC.Core.Models
 
         public virtual ICollection<Agent> ChildAgents { get; set; }
 
+        [ForeignKey("Area")]
+        public int? Area_ID { get; set; }
         public virtual Base_Area Area { get; set; }
 
         public virtual User User { get; set; }

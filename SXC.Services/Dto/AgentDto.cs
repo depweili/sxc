@@ -45,4 +45,12 @@ namespace SXC.Services.Dto
         public string Memo { get; set; }
 
     }
+
+    public class AgentTypeDto
+    {
+        public string typeid { get; set; }
+        public string typedesc { get; set; }
+        public string levelid { get; set; }
+        public string leveldesc { get; set; }
+    }
 }

@@ -11,6 +11,9 @@ using Newtonsoft.Json;
 using System.Data.Entity;
 using SXC.Services.Business;
 using SXC.Code.Utility;
+using System.Xml.Linq;
+using SXC.Code.Cache;
+using System.Web;
 
 namespace SXC.Services.Impl
 {
@@ -165,6 +168,39 @@ namespace SXC.Services.Impl
                     });
                 }
 
+                return res;
+            }
+        }
+
+        public List<PromotionDto> GetPromotions(int type = 0, int? top = null)
+        {
+            using (var db = base.NewDB())
+            {
+                List<Promotion> dblist;
+                //var dblist = db.Promotions.Where(t => t.IsValid == true && t.Type == type).OrderByDescending(t => t.CreateTime).ToList();
+                if (top == null)
+                {
+                    dblist = db.Promotions.Where(t => t.IsValid == true && t.Type == type).OrderByDescending(t => t.CreateTime).ToList();
+                }
+                else
+                {
+                    dblist = db.Promotions.Where(t => t.IsValid == true && t.Type == type).OrderByDescending(t => t.CreateTime).Take(top.Value).ToList();
+                }
+
+                var res = new List<PromotionDto>();
+                foreach (var item in dblist)
+                {
+                    res.Add(new PromotionDto
+                    {
+                        id = item.ID,
+                        name = item.Name,
+                        desc = item.Desc,
+                        picurl = GetPicUrl(item.Pic),
+                        date = item.CreateTime,
+                        //articleid = item.Article == null ? IntNull : item.Article.ID
+                        articleid = item.ArticleID
+                    });
+                }
                 return res;
             }
         }
@@ -634,17 +670,61 @@ namespace SXC.Services.Impl
             }
         }
 
+        public dynamic GetAgentTypeInfo(int type,int level)
+        {
+            var res = new { typedesc = "无", leveldesc = "无" };
+            try
+            {
+                if (type > 0 && level > 0)
+                {
+                    string key = "AgentTypesInfo";
+                    List<AgentTypeDto> data;
+                    if (CacheHelper.Exist(key))
+                    {
+                        data = CacheHelper.Get<List<AgentTypeDto>>("AgentTypesInfo");
+                    }
+                    else
+                    {
+                        var doc = XDocument.Load(HttpContext.Current.Server.MapPath("/Configs/AgentTypes.xml"));
+                        data = doc.Descendants("AgentLevel").Select(t => new AgentTypeDto { typeid = t.Attribute("id").Value, typedesc = t.Attribute("desc").Value, levelid = t.Ancestors().First().Attribute("id").Value, leveldesc = t.Ancestors().First().Attribute("desc").Value }).ToList();
+                        CacheHelper.Set(key, data);
+                    }
+
+                    var item = data.Where(t => t.typeid == type.ToString() && t.levelid == level.ToString()).Single();
+
+                    res = new { typedesc = item.typedesc, leveldesc = item.leveldesc };
+                }
+
+                return res;
+            }
+            catch (Exception ex)
+            {
+                return res;
+            }
+
+            
+        }
+
         public dynamic GetAgentRelationship(string agentcode)
         {
             using (var db = base.NewDB())
             {
                 var current = db.Agents.FirstOrDefault(t => t.Code == agentcode);
 
+                var ddd=db.Database.Log;
+
                 var childlist = current.ChildAgents.Select(t => new { t.ID, t.Level, t.Type, t.SupAgentBindTime });
 
                 var parent = current.ParentAgent;
 
                 var parentdto = new object() { };
+
+                var agenttype = GetAgentTypeInfo(current.Type, current.Level);
+
+                string agentarea=(current.Area==null?"":current.Area.Area);
+
+                var my = new { typedesc = agenttype.typedesc, leveldesc = agenttype.leveldesc, area = agentarea };
+                
 
                 if(parent!=null)
                 {
@@ -677,7 +757,7 @@ namespace SXC.Services.Impl
 
                 //dynamic res = dblist.ToList();
 
-                dynamic res = new { sup = parentdto, sub = dblist.ToList() };
+                dynamic res = new { sup = parentdto, sub = dblist.ToList(), self = my };
 
                 return res;
             }
