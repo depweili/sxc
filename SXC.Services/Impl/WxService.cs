@@ -678,15 +678,15 @@ namespace SXC.Services.Impl
                 if (type > 0 && level > 0)
                 {
                     string key = "AgentTypesInfo";
-                    List<AgentTypeDto> data;
+                    List<AgentTypeDto> data=new List<AgentTypeDto>();
                     if (CacheHelper.Exist(key))
                     {
                         data = CacheHelper.Get<List<AgentTypeDto>>("AgentTypesInfo");
                     }
                     else
                     {
-                        var doc = XDocument.Load(HttpContext.Current.Server.MapPath("/Configs/AgentTypes.xml"));
-                        data = doc.Descendants("AgentLevel").Select(t => new AgentTypeDto { typeid = t.Attribute("id").Value, typedesc = t.Attribute("desc").Value, levelid = t.Ancestors().First().Attribute("id").Value, leveldesc = t.Ancestors().First().Attribute("desc").Value }).ToList();
+                        var doc = XDocument.Load(HttpContext.Current.Server.MapPath("~/Configs/AgentTypes.xml"));
+                        data = doc.Descendants("AgentLevel").Select(t => new AgentTypeDto { levelid = t.Attribute("id").Value, leveldesc = t.Attribute("desc").Value, typeid = t.Ancestors().First().Attribute("id").Value, typedesc = t.Ancestors().First().Attribute("desc").Value }).ToList();
                         CacheHelper.Set(key, data);
                     }
 
@@ -699,7 +699,8 @@ namespace SXC.Services.Impl
             }
             catch (Exception ex)
             {
-                return res;
+
+                throw ex;
             }
 
             
