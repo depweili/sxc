@@ -128,11 +128,10 @@ namespace SXC.Services.Impl
                     var bus = new StoreBus(db);
                     var res = bus.SaveExchangeOrder(order);
 
-                    if(res.issave)
+                    if (res.issave)
                     {
                         db.SaveChanges();
                     }
-                    
 
                     return res;
                 }

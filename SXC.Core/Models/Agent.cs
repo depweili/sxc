@@ -13,7 +13,7 @@ namespace SXC.Core.Models
     {
         public Agent()
         {
-            IsValid = true;
+            IsValid = false;
             CreateTime = DateTime.Now;
             AgentID = Guid.NewGuid();
             Code = Cryptography.GetRandomString(8);

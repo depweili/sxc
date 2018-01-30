@@ -33,6 +33,14 @@ namespace SXC.Services.Business
             }
         }
 
+        public bool IsSave
+        {
+            get
+            {
+                return _isSave;
+            }
+        }
+
         public IntegralBus(SxcDbContext DbContext)
             : base(DbContext)
         {
@@ -342,7 +350,7 @@ namespace SXC.Services.Business
             return lo.Chance;
         }
 
-        public Prize GetWinPrize(UserLottery ul)
+        public BusinessResultDto GetWinPrize(UserLottery ul)
         {
             Prize winprize = null;
 
@@ -394,7 +402,14 @@ namespace SXC.Services.Business
             //    var res = IntegralProcess(ul.User.UserIntegral, null, extdata);
             //}
 
-            return winprize;
+
+            //return winprize;
+
+            _resultdto.issave = _isSave;
+            _resultdto.message = _message;
+            _resultdto.detail = winprize;
+
+            return _resultdto;
         }
 
         public void LotteryProcess(UserLottery ul,Prize winprize)

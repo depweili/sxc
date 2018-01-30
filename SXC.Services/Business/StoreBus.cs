@@ -47,6 +47,9 @@ namespace SXC.Services.Business
                         OrderInfo = orderinfo
                     });
 
+                    _resultdto.issave = bus.IsSave;
+                    _resultdto.message = bus.Message;
+
                     _resultdto.detail = new
                     {
                         orderinfo.OrderSn,

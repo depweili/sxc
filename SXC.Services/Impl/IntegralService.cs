@@ -199,7 +199,23 @@ namespace SXC.Services.Impl
 
                 if (dbul.Chance > 0)
                 {
-                    var winprize = bus.GetWinPrize(dbul);
+                    var busres = bus.GetWinPrize(dbul);
+
+                    var winprize = busres.detail;
+
+                    //按照积分记录有效期扣除
+                    if (busres.issave)
+                    {
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        res.remainingchance = dbul.Chance;
+                        res.prize = null;
+                        res.message = bus.Message;
+
+                        return res;
+                    }
 
                     res.remainingchance = dbul.Chance;
 
@@ -225,8 +241,6 @@ namespace SXC.Services.Impl
                     res.prize = null;
                     res.message = "您的机会已经用完";
                 }
-
-                db.SaveChanges();
 
                 return res;
             }
