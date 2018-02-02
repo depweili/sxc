@@ -67,8 +67,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessBase.cs" />
+    <Compile Include="Business\AccountBus.cs" />
     <Compile Include="Business\IntegralBus.cs" />
     <Compile Include="Business\StoreBus.cs" />
+    <Compile Include="Dto\AccountDto.cs" />
     <Compile Include="Dto\AgentDto.cs" />
     <Compile Include="Dto\ArticleDto.cs" />
     <Compile Include="Dto\BaseDto.cs" />

@@ -200,7 +200,6 @@ namespace SXC.Services.Business
                     }
                 }
 
-
                 var mark = activityname;
 
                 if (string.IsNullOrEmpty(mark))

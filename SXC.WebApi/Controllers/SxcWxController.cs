@@ -443,6 +443,7 @@ namespace SXC.WebApi.Controllers
             //return Json(res);
         }
 
+
         /// <summary>
         /// 上级代理绑定
         /// </summary>
@@ -633,6 +634,96 @@ namespace SXC.WebApi.Controllers
 
                 res.resData = null;
 
+                //res.resData = JsonConvert.DeserializeObject(data);
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+            }
+
+            return Ok(res);
+        }
+
+        /// <summary>
+        /// 获取账户信息
+        /// </summary>
+        /// <param name="authid"></param>
+        /// <returns></returns>
+        [Route("api/Account/{authid}")]
+        [HttpGet]
+        public IHttpActionResult GetUserAccount(Guid authid)
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                var data = service.GetUserAccount(authid);
+                if (data == null)
+                {
+                    throw new Exception("未找到代理信息");
+                }
+
+                res.resData = data;
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+            }
+            return Ok(res);
+            //return Json(res);
+        }
+
+        /// <summary>
+        /// 获取账户明细
+        /// </summary>
+        /// <param name="authid"></param>
+        /// <param name="queryJson"></param>
+        /// <returns></returns>
+        [Route("api/Account/Records")]
+        [HttpGet]
+        public IHttpActionResult GetAccountRecords(Guid authid, string queryJson="")
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                var data = service.GetAccountRecords(authid, queryJson);
+
+                res.resData = data;
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+            }
+            return Ok(res);
+            //return Json(res);
+        }
+
+        /// <summary>
+        /// 提现
+        /// </summary>
+        /// <param name="accountwithdto"></param>
+        /// <returns></returns>
+        [Route("api/Account/Withdraw")]
+        [HttpPost]
+        public IHttpActionResult Withdraw(AccountWithdrawDto accountwithdto)
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                dynamic data = service.Withdraw(accountwithdto);
+
+                if (!string.IsNullOrEmpty(data))
+                {
+                    res.code = "100";
+                    res.msg = data;
+                }
+
+                res.resData = null;
                 //res.resData = JsonConvert.DeserializeObject(data);
             }
             catch (Exception ex)

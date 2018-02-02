@@ -11,6 +11,8 @@ namespace SXC.Core
         public static readonly string SNPREFIX_ORDER = "100";
 
         public static readonly string SNPREFIX_PAYMENT = "800";
+
+        public static readonly string SNPREFIX_ACCOUNT = "400";
     }
 
 }

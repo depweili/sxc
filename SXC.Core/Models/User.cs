@@ -37,6 +37,8 @@ namespace SXC.Core.Models
         public virtual Agent Agent { get; set; }
 
         public virtual UserIntegral UserIntegral { get; set; }
+
+        public virtual UserAccount UserAccount { get; set; }
     }
 
     public class UserProfile

@@ -50,6 +50,8 @@ namespace UnitTestProject1
         {
             string pic = "wx12a7e3bf7a31d815";
 
+            pic = "0.2";
+
             string encode = Base64ForUrlEncode(pic);
 
             string decode = Base64ForUrlDecode(encode);

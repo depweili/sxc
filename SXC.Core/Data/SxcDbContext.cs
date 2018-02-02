@@ -78,6 +78,12 @@ namespace SXC.Core.Data
         public DbSet<CommissionRecord> CommissionRecords { get; set; }
         public DbSet<PaymentItem> PaymentItems { get; set; }
 
+        //////////////////////
+        public DbSet<UserAccount> UserAccounts { get; set; }
+        public DbSet<AccountRecord> AccountRecords { get; set; }
+        public DbSet<AccountWithdraw> AccountWithdraws { get; set; }
+        
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             string tbPrefix = ConfigHelper.GetConfig("tablePrefix");//ConfigurationManager.AppSettings["tablePrefix"];
@@ -130,6 +136,11 @@ namespace SXC.Core.Data
             modelBuilder.Configurations.Add(new UserPaymentMap());
             modelBuilder.Configurations.Add(new CommissionRecordMap());
             modelBuilder.Configurations.Add(new PaymentItemMap());
+
+            //////////////////////////////////////////////
+            modelBuilder.Configurations.Add(new UserAccountMap());
+            modelBuilder.Configurations.Add(new AccountRecordMap());
+            modelBuilder.Configurations.Add(new AccountWithdrawMap());
 
             //////////////////////////////////////////////
 

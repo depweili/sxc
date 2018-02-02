@@ -14,11 +14,13 @@ using SXC.Code.Utility;
 using System.Xml.Linq;
 using SXC.Code.Cache;
 using System.Web;
+using SXC.Code.Extensions;
 
 namespace SXC.Services.Impl
 {
     public class WxService : ServiceBase
     {
+        public static int ShareRewardType = ConfigHelper.GetConfigInt("ShareRewardType");
         public int? IntNull = null;
         private string GetPicUrl(string pic)
         {
@@ -315,26 +317,43 @@ namespace SXC.Services.Impl
                         };
                         db.UserIntegrals.Add(ui);
 
-                        
+                        UserAccount uc = new UserAccount
+                        {
+                            User = user
+                        };
+                        db.UserAccounts.Add(uc);
+
+                        db.SaveChanges();
 
                         try
                         {
                             if (!string.IsNullOrEmpty(wxuser.sharecode))
                             {
                                 Guid authid = ConvertHelper.StrToGuid(wxuser.sharecode, default(Guid));
-                                var shareui = db.UserIntegrals.FirstOrDefault(t => t.User.AuthID == authid);
-                                if (shareui != null)
-                                {
-                                    var bus = new IntegralBus(db);
-                                    bus.IntegralProcess(shareui, "分享有礼", user);
 
-                                    //分享直接成为上级
-                                    var shareagent = shareui.User.Agent;
-                                    if(shareagent.IsValid??false)
+                                if (ShareRewardType == 2)
+                                {
+                                    var useracc = db.UserAccounts.FirstOrDefault(t => t.User.AuthID == authid);
+                                    var bus = new AccountBus(db);
+                                    bus.ShareReward(useracc, user);
+                                }
+                                else
+                                {
+                                    var shareui = db.UserIntegrals.FirstOrDefault(t => t.User.AuthID == authid);
+                                    if (shareui != null)
                                     {
-                                        agent.ParentAgent = shareui.User.Agent;
+                                        var bus = new IntegralBus(db);
+                                        bus.IntegralProcess(shareui, "分享有礼", user);
+
+                                        //分享直接成为上级
+                                        var shareagent = shareui.User.Agent;
+                                        if (shareagent.IsValid ?? false)
+                                        {
+                                            agent.ParentAgent = shareui.User.Agent;
+                                        }
                                     }
                                 }
+                                
                             }
                         }
                         catch (Exception ex)
@@ -898,8 +917,123 @@ namespace SXC.Services.Impl
             }
         }
 
+        public UserAccountDto GetUserAccount(Guid authid)
+        {
+            using (var db = base.NewDB())
+            {
+                var dbitem = db.Users.FirstOrDefault(t => t.AuthID == authid);
 
-        
+                if (dbitem == null || dbitem.UserAccount == null)
+                {
+                    return null;
+                }
 
+                UserAccountDto userAccountDto = new UserAccountDto
+                {
+                    Balance = dbitem.UserAccount.Balance,
+                    IsValid = dbitem.UserAccount.IsValid,
+                    IsVerified = dbitem.UserAccount.IsVerified,
+                    BankCard = StringHelper.ReplaceWithSpecialChar(dbitem.UserAccount.BankCard)
+                };
+
+                return userAccountDto;
+            }
+        }
+
+        public List<AccountRecordDto> GetAccountRecords(Guid authid,string queryJson)
+        {
+            using (var db = base.NewDB())
+            {
+                IEnumerable<AccountRecord> dblist = null;
+
+                var expression = LinqExtensions.True<AccountRecord>();
+                var queryParam = queryJson.ToJObject();
+
+                expression = expression.And(t => t.UserAccount.User.AuthID == authid);
+
+                if (!queryParam["month"].IsEmpty())
+                {
+                    string keyord = queryParam["month"].ToString();
+                    expression = expression.And(t => t.CreateTime.ToString("yyyy-MM") == keyord);
+                }
+
+                var query = db.AccountRecords.Where(expression).OrderByDescending(t => t.ID);
+
+                if (!queryParam["pageSize"].IsEmpty())
+                {
+                    int pageSize = queryParam["pageSize"].ToString().ToInt();
+                    int pageNum = queryParam["pageNum"].IsEmpty()?50:queryParam["pageNum"].ToString().ToInt();
+                    dblist = query.Skip(pageSize * (pageNum - 1)).Take(pageNum);
+                }
+                else
+                {
+                    dblist = query.Take(50);
+                }
+
+                var res = new List<AccountRecordDto>();
+                foreach (var item in dblist)
+                {
+                    res.Add(new AccountRecordDto
+                    {
+                        BeforeBalance=item.BeforeBalance,
+                        AfterBalance=item.AfterBalance,
+                        ShortMark = item.ShortMark,
+                        Amount = item.Amount,
+                        CreateTime = item.CreateTime,
+                        AccountRecordSn = item.AccountRecordSn,
+                        Memo = item.Memo
+                    });
+                }
+                return res;
+            }
+        }
+
+        public string Withdraw(AccountWithdrawDto withdrawdto)
+        {
+            using (var db = base.NewDB())
+            {
+                if (withdrawdto.Amount < ConfigHelper.GetConfigInt("MinWithDrawAmount"))
+                {
+                    return "未达到提现标准";
+                }
+
+                var dbitem = db.UserAccounts.FirstOrDefault(t => t.User.AuthID == withdrawdto.AuthID);
+
+                if (dbitem == null)
+                {
+                    return "账户异常";
+                }
+
+                if (!withdrawdto.BankCard.IsEmpty())
+                {
+                    dbitem.BankCard = withdrawdto.BankCard;
+                }
+
+                if (withdrawdto.Amount > dbitem.Balance || withdrawdto.Amount<0)
+                {
+                    return "金额异常";
+                }
+
+                if (dbitem.BankCard.IsEmpty())
+                {
+                    return "请填写银行卡号";
+                }
+
+                AccountWithdraw aw = new AccountWithdraw
+                {
+                    Amount = withdrawdto.Amount,
+                    UserAccount = dbitem,
+                };
+
+                db.AccountWithdraws.Add(aw);
+
+                dbitem.Balance = dbitem.Balance - withdrawdto.Amount;
+                dbitem.LockBalance = dbitem.LockBalance + withdrawdto.Amount;
+
+                db.SaveChanges();
+
+                return string.Empty;
+            }
+        }
     }
 }

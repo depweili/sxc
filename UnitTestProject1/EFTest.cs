@@ -3554,18 +3554,54 @@ SELECT * FROM temp");
         {
             using (var db = new SxcDbContext())
             {
-                var strid = "3b58c209-95f5-43ac-847c-5ad738463887";
-                Guid authid = ConvertHelper.StrToGuid(strid, default(Guid));
-                var user = db.Users.Single(t => t.AuthID == authid);
+                try
+                {
+                    //var strid = "3b58c209-95f5-43ac-847c-5ad738463887";
+                    //d119e6d4-1bb0-40d4-ba5f-2bb10a31778b
+                    //var strid = "e377c92c-5938-4bef-89e4-7edbf689bcbd";
+                    var strid = "d119e6d4-1bb0-40d4-ba5f-2bb10a31778b";
+                    Guid authid = ConvertHelper.StrToGuid(strid, default(Guid));
 
-                db.UserAuths.Remove(db.UserAuths.Single(t => t.User.AuthID == authid));
-                db.UserIntegrals.Remove(db.UserIntegrals.Single(t => t.User.AuthID == authid));
-                db.UserProfiles.Remove(db.UserProfiles.Single(t => t.User.AuthID == authid));
-                db.Agents.Remove(db.Agents.Single(t => t.User.AuthID == authid));
+                    var user = db.Users.Single(t => t.AuthID == authid);
 
-                db.Users.Remove(user);
+                    db.UserAuths.RemoveRange(db.UserAuths.Where(t => t.User.AuthID == authid));
 
-                db.SaveChanges();
+                    db.CommissionRecords.RemoveRange(db.CommissionRecords.Where(t => t.Agent.User.AuthID == authid));
+
+                    db.UserCoupons.RemoveRange(db.UserCoupons.Where(t => t.User.AuthID == authid));
+                    db.UserLotterys.RemoveRange(db.UserLotterys.Where(t => t.User.AuthID == authid));
+                    
+
+                    db.IntegralRecords.RemoveRange(db.IntegralRecords.Where(t => t.UserIntegral.User.AuthID == authid));
+                    db.IntegralSignIns.RemoveRange(db.IntegralSignIns.Where(t => t.UserIntegral.User.AuthID == authid));
+                    db.IntegralUserActivitys.RemoveRange(db.IntegralUserActivitys.Where(t => t.UserIntegral.User.AuthID == authid));
+                    db.UserIntegrals.Remove(db.UserIntegrals.Single(t => t.User.AuthID == authid));
+
+                    db.LotteryRecords.RemoveRange(db.LotteryRecords.Where(t => t.User.AuthID == authid));
+
+                    db.Cooperations.RemoveRange(db.Cooperations.Where(t => t.User.AuthID == authid));
+
+                    db.ReservationCourses.RemoveRange(db.ReservationCourses.Where(t => t.Reservation.User.AuthID == authid));
+                    db.Reservations.RemoveRange(db.Reservations.Where(t => t.User.AuthID == authid));
+
+                    db.OrderIntegralRecords.RemoveRange(db.OrderIntegralRecords.Where(t => t.OrderInfo.UserIntegral.User.AuthID == authid));
+                    db.OrderCommoditys.RemoveRange(db.OrderCommoditys.Where(t => t.OrderInfo.UserIntegral.User.AuthID == authid));
+                    db.OrderInfos.RemoveRange(db.OrderInfos.Where(t => t.UserIntegral.User.AuthID == authid));
+
+                    db.UserProfiles.Remove(db.UserProfiles.Single(t => t.User.AuthID == authid));
+                    db.Agents.Remove(db.Agents.Single(t => t.User.AuthID == authid));
+                    db.UserAccounts.Remove(db.UserAccounts.Single(t => t.User.AuthID == authid));
+
+                    db.Users.Remove(user);
+
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    
+                    throw;
+                }
+                
             }
 
         }
@@ -3755,6 +3791,43 @@ SELECT * FROM temp");
                 }
             }
             return result;
+        }
+
+
+        [TestMethod]
+        public void InitUserAccount()
+        {
+            using (var db = new SxcDbContext())
+            {
+                foreach (var u in db.Users)
+                {
+                    if (u.UserAccount == null)
+                    {
+                        u.UserAccount = db.UserAccounts.Add(new SXC.Core.Models.UserAccount
+                        {
+                            User = u
+                        });
+                    }
+                }
+
+                db.SaveChanges();
+            }
+        }
+
+        [TestMethod]
+        public void TestEFSql2()
+        {
+            using (var db = new SxcDbContext())
+            {
+                db.Database.Log = Console.WriteLine;
+
+                var sharecode = "e377c92c-5938-4bef-89e4-7edbf689bcbd";
+                Guid authid = ConvertHelper.StrToGuid(sharecode, default(Guid));
+
+                var dbitem = db.UserAccounts.FirstOrDefault(t => t.User.AuthID == authid);
+
+                Console.WriteLine(dbitem.AccountID);
+            }
         }
 
 

@@ -61,6 +61,10 @@
     <Compile Include="Cache\CacheHelper.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="Cryptography\Cryptography.cs" />
+    <Compile Include="Extensions\Convert.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
+    <Compile Include="Extensions\JsonExtensions.cs" />
+    <Compile Include="Extensions\LinqExtensions.cs" />
     <Compile Include="Extensions\MappingExtensions.cs" />
     <Compile Include="Json\JsonHelper.cs" />
     <Compile Include="Log\Log.cs" />
@@ -69,6 +73,7 @@
     <Compile Include="Utility\ConfigHelper.cs" />
     <Compile Include="Utility\ConvertHelper.cs" />
     <Compile Include="Utility\RandomHelper.cs" />
+    <Compile Include="Utility\StringHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

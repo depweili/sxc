@@ -56,6 +56,7 @@
     <Compile Include="Constant.cs" />
     <Compile Include="Data\SxcDbContext.cs" />
     <Compile Include="Data\SxcDbContextInitializer.cs" />
+    <Compile Include="Mappings\AccountMap.cs" />
     <Compile Include="Mappings\AgentMap.cs" />
     <Compile Include="Mappings\ArticleMap.cs" />
     <Compile Include="Mappings\Base_AreaMap.cs" />
@@ -182,7 +183,12 @@
     <Compile Include="Migrations\201712030508015_zs3.6.Designer.cs">
       <DependentUpon>201712030508015_zs3.6.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201802020842113_zs3.7.cs" />
+    <Compile Include="Migrations\201802020842113_zs3.7.Designer.cs">
+      <DependentUpon>201802020842113_zs3.7.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Agent.cs" />
     <Compile Include="Models\Article.cs" />
     <Compile Include="Models\Base_Area.cs" />
@@ -293,6 +299,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712030508015_zs3.6.resx">
       <DependentUpon>201712030508015_zs3.6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201802020842113_zs3.7.resx">
+      <DependentUpon>201802020842113_zs3.7.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
