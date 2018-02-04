@@ -94,7 +94,7 @@ namespace SXC.Core.Models
 
         public string Memo { get; set; }
 
-        public int AccountRecordID { get; set; }
+        public int? AccountRecordID { get; set; }
         public virtual AccountRecord AccountRecord { get; set; }
     }
 

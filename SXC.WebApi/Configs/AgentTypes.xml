@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AgentTypes>
+  <AgentType id="1" desc="直辖市代理">
+    <AgentLevel id="1" desc="特级代理" />
+    <AgentLevel id="2" desc="高级代理" />
+    <AgentLevel id="3" desc="中级代理" />
+    <AgentLevel id="4" desc="初级代理" />
+  </AgentType>
+  <AgentType id="2" desc="非直辖市代理">
+    <AgentLevel id="1" desc="省级代理" />
+    <AgentLevel id="2" desc="市级代理" />
+    <AgentLevel id="3" desc="县级代理" />
+    <AgentLevel id="4" desc="个人代理" />
+  </AgentType>
+  <AgentType id="3" desc="直属代理">
+    <AgentLevel id="1" desc="总监" />
+    <AgentLevel id="2" desc="主管" />
+    <AgentLevel id="3" desc="员工" />
+    <AgentLevel id="4" desc="个人代理" />
+  </AgentType>
+</AgentTypes>

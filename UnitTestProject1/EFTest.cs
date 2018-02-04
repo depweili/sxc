@@ -3831,5 +3831,38 @@ SELECT * FROM temp");
         }
 
 
+        [TestMethod]
+        public void TestAddShareRed()
+        {
+            using (var db = new SxcDbContext())
+            {
+                //db.Database.Log = Console.WriteLine;
+
+                var sharecode = "e377c92c-5938-4bef-89e4-7edbf689bcbd";
+                Guid authid = ConvertHelper.StrToGuid(sharecode, default(Guid));
+
+                var useracc = db.UserAccounts.FirstOrDefault(t => t.User.AuthID == authid);
+
+                decimal redmoney = 0.2m;
+
+                var newrecord = new AccountRecord
+                {
+                    Amount = redmoney,
+                    AfterBalance = useracc.Balance + redmoney,
+                    BeforeBalance = useracc.Balance,
+                    UserAccount = useracc,
+                    ShortMark = "分享红包",
+                    Type = 1,
+                    Memo = "test"
+                };
+
+                useracc.Balance = newrecord.AfterBalance;
+                db.AccountRecords.Add(newrecord);
+
+                db.SaveChanges();
+                //Console.WriteLine(dbitem.AccountID);
+            }
+        }
+
     }
 }

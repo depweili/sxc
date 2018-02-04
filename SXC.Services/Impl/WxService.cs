@@ -944,6 +944,7 @@ namespace SXC.Services.Impl
         {
             using (var db = base.NewDB())
             {
+                int pageSize = 50;
                 IEnumerable<AccountRecord> dblist = null;
 
                 var expression = LinqExtensions.True<AccountRecord>();
@@ -961,13 +962,13 @@ namespace SXC.Services.Impl
 
                 if (!queryParam["pageSize"].IsEmpty())
                 {
-                    int pageSize = queryParam["pageSize"].ToString().ToInt();
+                    pageSize = queryParam["pageSize"].ToString().ToInt();
                     int pageNum = queryParam["pageNum"].IsEmpty()?50:queryParam["pageNum"].ToString().ToInt();
                     dblist = query.Skip(pageSize * (pageNum - 1)).Take(pageNum);
                 }
                 else
                 {
-                    dblist = query.Take(50);
+                    dblist = query.Take(pageSize);
                 }
 
                 var res = new List<AccountRecordDto>();
