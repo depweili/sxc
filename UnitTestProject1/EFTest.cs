@@ -3589,6 +3589,14 @@ SELECT * FROM temp");
                     db.OrderInfos.RemoveRange(db.OrderInfos.Where(t => t.UserIntegral.User.AuthID == authid));
 
                     db.UserProfiles.Remove(db.UserProfiles.Single(t => t.User.AuthID == authid));
+
+                    var query= db.Agents.Where(t => t.ParentAgent.ID == user.Agent.ID);
+
+                    foreach (var x in query)
+                    {
+                        x.ParentAgent = null;
+                    }
+
                     db.Agents.Remove(db.Agents.Single(t => t.User.AuthID == authid));
                     db.UserAccounts.Remove(db.UserAccounts.Single(t => t.User.AuthID == authid));
 
@@ -3599,11 +3607,100 @@ SELECT * FROM temp");
                 catch (Exception ex)
                 {
                     
-                    throw;
+                    throw ex;
                 }
                 
             }
 
+        }
+
+        [TestMethod]
+        public void TestDelUsers()
+        {
+            //string[] users={"郭斌峰","叶秀琴","窦强强","李艳顺","师秋芳","闫硕","伊琼琼","盛甜甜"};
+            //string[] users = { "ct尕妮子", "陈莉" };
+            string[] users = { "如怀念〆" };//, "宁非"
+            try
+            {
+                using (var db = new SxcDbContext())
+                {
+                    var query = db.UserProfiles.Where(t => users.Contains(t.RealName) || users.Contains(t.NickName));
+
+                    foreach (var item in query)
+                    {
+                        var guid = item.User.AuthID;
+
+                        Console.WriteLine(item.NickName + "-" + item.RealName);
+
+                        DelUser(db, item.User.AuthID);
+
+                        
+
+                        
+                    }
+
+                    var res = db.SaveChanges();
+
+                    Console.WriteLine(res + ":删除成功");
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                throw ex;
+            }
+        }
+
+
+        public void DelUser(SxcDbContext db, Guid authid)
+        {
+            try
+            {
+                var user = db.Users.Single(t => t.AuthID == authid);
+
+                db.UserAuths.RemoveRange(db.UserAuths.Where(t => t.User.AuthID == authid));
+
+                db.CommissionRecords.RemoveRange(db.CommissionRecords.Where(t => t.Agent.User.AuthID == authid));
+
+                db.UserCoupons.RemoveRange(db.UserCoupons.Where(t => t.User.AuthID == authid));
+                db.UserLotterys.RemoveRange(db.UserLotterys.Where(t => t.User.AuthID == authid));
+
+
+                db.IntegralRecords.RemoveRange(db.IntegralRecords.Where(t => t.UserIntegral.User.AuthID == authid));
+                db.IntegralSignIns.RemoveRange(db.IntegralSignIns.Where(t => t.UserIntegral.User.AuthID == authid));
+                db.IntegralUserActivitys.RemoveRange(db.IntegralUserActivitys.Where(t => t.UserIntegral.User.AuthID == authid));
+                db.UserIntegrals.Remove(db.UserIntegrals.Single(t => t.User.AuthID == authid));
+
+                db.LotteryRecords.RemoveRange(db.LotteryRecords.Where(t => t.User.AuthID == authid));
+
+                db.Cooperations.RemoveRange(db.Cooperations.Where(t => t.User.AuthID == authid));
+
+                db.ReservationCourses.RemoveRange(db.ReservationCourses.Where(t => t.Reservation.User.AuthID == authid));
+                db.Reservations.RemoveRange(db.Reservations.Where(t => t.User.AuthID == authid));
+
+                db.OrderIntegralRecords.RemoveRange(db.OrderIntegralRecords.Where(t => t.OrderInfo.UserIntegral.User.AuthID == authid));
+                db.OrderCommoditys.RemoveRange(db.OrderCommoditys.Where(t => t.OrderInfo.UserIntegral.User.AuthID == authid));
+                db.OrderInfos.RemoveRange(db.OrderInfos.Where(t => t.UserIntegral.User.AuthID == authid));
+
+                db.UserProfiles.Remove(db.UserProfiles.Single(t => t.User.AuthID == authid));
+
+                var query = db.Agents.Where(t => t.ParentAgent.ID == user.Agent.ID);
+
+                foreach (var x in query)
+                {
+                    x.ParentAgent = null;
+                }
+
+                db.Agents.Remove(db.Agents.Single(t => t.User.AuthID == authid));
+                db.UserAccounts.Remove(db.UserAccounts.Single(t => t.User.AuthID == authid));
+
+                db.Users.Remove(user);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
         }
 
 

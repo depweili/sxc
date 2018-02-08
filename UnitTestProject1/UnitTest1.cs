@@ -46,6 +46,17 @@ namespace UnitTestProject1
         }
 
         [TestMethod]
+        public void TestAESDecrypt()
+        {
+            var AesIV = "DXZYgdrcYmlG0II2KCRq2w==";//"ZihTz2XxG5t+/Od/Meb2pg==";
+            var AesKey = "ZihTz2XxG5t+/Od/Meb2pg==";//"DXZYgdrcYmlG0II2KCRq2w==";
+            string text = "kv0LsHGLkguw9o9FO7pGUUM7X1EeIWrm+hKd/jD/VL2hMM1KSJ+Fa/GimHxdKh+8luxEx2209WIaIxG/GpaP62KXyv/BS1K9R2meLMqx07TuQk3WTfBd/5bnFaecSqEFL9MhRtqNHggjsTJmiHALKR6xDnsC8mGTG3iePkBd0XysoFKmLtxDAYHGZBUfr6pxJbfuqH8kfvV17VY/q2BIkpIUw0pimU7wOZtbbBn468UrcxQynw4kQ/d/YNu3t3HPMrFQOI2X9OrJTxrQ9Q/Qqeni9skYKzWTnVe1RuuLMhP7niWvY1ag01KZWwPFIpj33m77/405LFo32QINI0OQlDl4fq6C6pFykqf1vpWEWmpV+3lGrnue9Q0qJbDPaU8Hn7ehP19cTIm6q1uAKUGq6KSmx3kWhhtLFa6jMN5eNZeKZqpOx61e/BkJxd+X9P9klKenDFz63Xgf+aRpp/h04tybpz/tKTDoo70be4Z08Nc=";
+            string ss = new WxHelper().AESDecrypt(text, AesKey, AesIV);
+
+            Console.Write(ss);
+        }
+
+        [TestMethod]
         public void TestEncode()
         {
             string pic = "wx12a7e3bf7a31d815";

@@ -97,8 +97,9 @@ namespace SXC.WebApi.Utility
 
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                
                 return null;
 
             }
