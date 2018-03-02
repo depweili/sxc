@@ -45,6 +45,14 @@ namespace SXC.Services.Dto
 
         public decimal Amount { get; set; }
 
+        public string Name { get; set; }
+
         public string BankCard { get; set; }
+
+        public DateTime CreateTime { get; set; }
+
+        public int State { get; set; }
+
+        public string Memo { get; set; }
     }
 }

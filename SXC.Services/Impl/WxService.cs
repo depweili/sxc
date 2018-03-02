@@ -963,7 +963,7 @@ namespace SXC.Services.Impl
                 if (!queryParam["pageSize"].IsEmpty())
                 {
                     pageSize = queryParam["pageSize"].ToString().ToInt();
-                    int pageNum = queryParam["pageNum"].IsEmpty()?50:queryParam["pageNum"].ToString().ToInt();
+                    int pageNum = queryParam["pageNum"].IsEmpty()?1:queryParam["pageNum"].ToString().ToInt();
                     dblist = query.Skip(pageSize * (pageNum - 1)).Take(pageNum);
                 }
                 else
@@ -1024,6 +1024,8 @@ namespace SXC.Services.Impl
                 {
                     Amount = withdrawdto.Amount,
                     UserAccount = dbitem,
+                    Name = withdrawdto.Name,
+                    BankCard = withdrawdto.BankCard
                 };
 
                 db.AccountWithdraws.Add(aw);
@@ -1034,6 +1036,54 @@ namespace SXC.Services.Impl
                 db.SaveChanges();
 
                 return string.Empty;
+            }
+        }
+
+        public List<AccountWithdrawDto> GetWithdrawRecords(Guid authid, string queryJson)
+        {
+            using (var db = base.NewDB())
+            {
+                int pageSize = 50;
+                IEnumerable<AccountWithdraw> dblist = null;
+
+                var expression = LinqExtensions.True<AccountWithdraw>();
+                var queryParam = queryJson.ToJObject();
+
+                expression = expression.And(t => t.UserAccount.User.AuthID == authid);
+
+                if (!queryParam["month"].IsEmpty())
+                {
+                    string keyord = queryParam["month"].ToString();
+                    expression = expression.And(t => t.CreateTime.ToString("yyyy-MM") == keyord);
+                }
+
+                var query = db.AccountWithdraws.Where(expression).OrderByDescending(t => t.ID);
+
+                if (!queryParam["pageSize"].IsEmpty())
+                {
+                    pageSize = queryParam["pageSize"].ToString().ToInt();
+                    int pageNum = queryParam["pageNum"].IsEmpty() ? 1 : queryParam["pageNum"].ToString().ToInt();
+                    dblist = query.Skip(pageSize * (pageNum - 1)).Take(pageNum);
+                }
+                else
+                {
+                    dblist = query.Take(pageSize);
+                }
+
+                var res = new List<AccountWithdrawDto>();
+                foreach (var item in dblist)
+                {
+                    res.Add(new AccountWithdrawDto
+                    {
+                        Amount = item.Amount,
+                        CreateTime = item.CreateTime,
+                        Name = item.Name,
+                        BankCard = item.BankCard,
+                        Memo = item.Memo,
+                        State = item.State
+                    });
+                }
+                return res;
             }
         }
     }

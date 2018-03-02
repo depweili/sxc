@@ -43,6 +43,8 @@ namespace SXC.Core.Mappings
         {
             this.Property(t => t.Amount).HasColumnType("MONEY");
             this.Property(t => t.Memo).HasMaxLength(100);
+            this.Property(t => t.Name).HasMaxLength(20);
+            this.Property(t => t.BankCard).HasMaxLength(20);
         }
     }
 }

@@ -96,6 +96,9 @@ namespace SXC.Core.Models
 
         public int? AccountRecordID { get; set; }
         public virtual AccountRecord AccountRecord { get; set; }
+
+        public string Name { get; set; }
+        public string BankCard { get; set; }
     }
 
 }

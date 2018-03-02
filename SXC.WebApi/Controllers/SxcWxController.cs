@@ -735,5 +735,32 @@ namespace SXC.WebApi.Controllers
             return Ok(res);
         }
 
+        /// <summary>
+        /// 提现记录
+        /// </summary>
+        /// <param name="authid"></param>
+        /// <param name="queryJson"></param>
+        /// <returns></returns>
+        [Route("api/Account/WithdrawRecords")]
+        [HttpGet]
+        public IHttpActionResult GetWithdrawRecords(Guid authid, string queryJson = "")
+        {
+            var res = new ResponseBase();
+            try
+            {
+                var service = new WxService();
+                dynamic data = service.GetWithdrawRecords(authid, queryJson);
+
+                res.resData = data;
+            }
+            catch (Exception ex)
+            {
+                res.code = "100";
+                res.msg = ex.Message;
+            }
+
+            return Ok(res);
+        }
+
     }
 }
