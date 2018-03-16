@@ -10,9 +10,15 @@ namespace SXC.Services.Dto
 {
     public class UserAccountDto
     {
+        [JsonConverter(typeof(DecimalDigitsConverter))]
         public decimal Balance { get; set; }
 
         public string BankCard { get; set; }
+
+        public string BankName { get; set; }
+
+        public string BranchBankName { get; set; }
+        public string MobilePhone { get; set; }
 
         public bool IsValid { get; set; }
 
@@ -27,10 +33,13 @@ namespace SXC.Services.Dto
 
         public string ShortMark { get; set; }
 
+        [JsonConverter(typeof(DecimalDigitsConverter))]
         public decimal Amount { get; set; }
 
+        [JsonConverter(typeof(DecimalDigitsConverter))]
         public decimal AfterBalance { get; set; }
 
+        [JsonConverter(typeof(DecimalDigitsConverter))]
         public decimal BeforeBalance { get; set; }
 
         [JsonConverter(typeof(CommonDateTimeConverter))]
@@ -43,11 +52,17 @@ namespace SXC.Services.Dto
     {
         public Guid AuthID { get; set; }
 
+        [JsonConverter(typeof(DecimalDigitsConverter))]
         public decimal Amount { get; set; }
 
         public string Name { get; set; }
 
         public string BankCard { get; set; }
+
+        public string BankName { get; set; }
+
+        public string BranchBankName { get; set; }
+        public string MobilePhone { get; set; }
 
         public DateTime CreateTime { get; set; }
 

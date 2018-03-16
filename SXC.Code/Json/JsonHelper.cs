@@ -130,9 +130,19 @@ namespace SXC.Code.Json
             return objectType == typeof(decimal);  
         }
 
+        //public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        //{
+        //    return reader.Value;
+        //}
+
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            return reader.Value;
+            throw new NotImplementedException("Unnecessary because CanRead is false. The type will skip the converter.");
+        }
+
+        public override bool CanRead
+        {
+            get { return false; }
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)

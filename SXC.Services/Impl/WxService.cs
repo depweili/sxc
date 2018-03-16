@@ -1005,19 +1005,21 @@ namespace SXC.Services.Impl
                     return "账户异常";
                 }
 
-                if (!withdrawdto.BankCard.IsEmpty())
-                {
-                    dbitem.BankCard = withdrawdto.BankCard;
-                }
-
-                if (withdrawdto.Amount > dbitem.Balance || withdrawdto.Amount<0)
+                if (withdrawdto.Amount > dbitem.Balance || withdrawdto.Amount < 0)
                 {
                     return "金额异常";
                 }
 
-                if (dbitem.BankCard.IsEmpty())
+                if (!withdrawdto.BankCard.IsEmpty() && !withdrawdto.BankName.IsEmpty() && !withdrawdto.BranchBankName.IsEmpty())
                 {
-                    return "请填写银行卡号";
+                    dbitem.BankCard = withdrawdto.BankCard;
+                    dbitem.BankName = withdrawdto.BankName;
+                    dbitem.BranchBankName = withdrawdto.BranchBankName;
+                    dbitem.MobilePhone = withdrawdto.MobilePhone;
+                }
+                else
+                {
+                    return "请填写完整信息";
                 }
 
                 AccountWithdraw aw = new AccountWithdraw
@@ -1025,7 +1027,10 @@ namespace SXC.Services.Impl
                     Amount = withdrawdto.Amount,
                     UserAccount = dbitem,
                     Name = withdrawdto.Name,
-                    BankCard = withdrawdto.BankCard
+                    BankCard = withdrawdto.BankCard,
+                    BankName = withdrawdto.BankName,
+                    BranchBankName = withdrawdto.BranchBankName,
+                    MobilePhone = withdrawdto.MobilePhone
                 };
 
                 db.AccountWithdraws.Add(aw);
@@ -1080,7 +1085,10 @@ namespace SXC.Services.Impl
                         Name = item.Name,
                         BankCard = item.BankCard,
                         Memo = item.Memo,
-                        State = item.State
+                        State = item.State,
+                        BankName = item.BankName,
+                        BranchBankName = item.BranchBankName,
+                        MobilePhone = item.MobilePhone
                     });
                 }
                 return res;

@@ -13,12 +13,15 @@ namespace SXC.Core.Mappings
     {
         public UserAccountMap()
         {
-            this.Property(t => t.PassWword).HasMaxLength(20);
+            this.Property(t => t.PassWord).HasMaxLength(20);
             this.Property(t => t.Balance).HasColumnType("MONEY");
             this.Property(t => t.LockBalance).HasColumnType("MONEY");
             this.Property(t => t.Cash).HasColumnType("MONEY");
             this.Property(t => t.Expense).HasColumnType("MONEY");
             this.Property(t => t.BankCard).HasMaxLength(20);
+            this.Property(t => t.BankName).HasMaxLength(50);
+            this.Property(t => t.BranchBankName).HasMaxLength(50);
+            this.Property(t => t.MobilePhone).HasMaxLength(50);
 
             this.HasRequired(t => t.User).WithRequiredDependent(t => t.UserAccount);
         }
@@ -45,6 +48,9 @@ namespace SXC.Core.Mappings
             this.Property(t => t.Memo).HasMaxLength(100);
             this.Property(t => t.Name).HasMaxLength(20);
             this.Property(t => t.BankCard).HasMaxLength(20);
+            this.Property(t => t.BankName).HasMaxLength(50);
+            this.Property(t => t.BranchBankName).HasMaxLength(50);
+            this.Property(t => t.MobilePhone).HasMaxLength(50);
         }
     }
 }

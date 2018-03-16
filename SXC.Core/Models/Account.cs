@@ -19,8 +19,8 @@ namespace SXC.Core.Models
         public int ID { get; set; }
 
         public Guid AccountID { get; set; }
-
-        public string PassWword { get; set; }
+        //支付密码
+        public string PassWord { get; set; }
 
         public decimal Balance { get; set; }
 
@@ -31,6 +31,11 @@ namespace SXC.Core.Models
         public decimal Expense { get; set; }
 
         public string BankCard { get; set; }
+
+        public string BankName { get; set; }
+
+        public string BranchBankName { get; set; }
+        public string MobilePhone { get; set; }
 
         public bool IsValid { get; set; }
 
@@ -99,6 +104,10 @@ namespace SXC.Core.Models
 
         public string Name { get; set; }
         public string BankCard { get; set; }
+        public string BankName { get; set; }
+        public string BranchBankName { get; set; }
+        public string MobilePhone { get; set; }
+
     }
 
 }
