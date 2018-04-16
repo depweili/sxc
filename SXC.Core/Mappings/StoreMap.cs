@@ -62,5 +62,14 @@ namespace SXC.Core.Mappings
         }
     }
 
+    public class CommodityLimitMap : EntityTypeConfiguration<CommodityLimit>
+    {
+        public CommodityLimitMap()
+        {
+            this.Property(t => t.Granularity).HasMaxLength(50);
+            this.Property(t => t.Memo).HasMaxLength(50);
+        }
+    }
+
 
 }

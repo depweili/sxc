@@ -56,6 +56,7 @@ namespace SXC.Core.Data
         public DbSet<Commodity> Commoditys { get; set; }
         public DbSet<OrderInfo> OrderInfos { get; set; }
         public DbSet<OrderCommodity> OrderCommoditys { get; set; }
+        public DbSet<CommodityLimit> CommodityLimits { get; set; }
 
         public DbSet<OrderIntegralRecord> OrderIntegralRecords { get; set; }
 
@@ -143,6 +144,11 @@ namespace SXC.Core.Data
             modelBuilder.Configurations.Add(new AccountWithdrawMap());
 
             //////////////////////////////////////////////
+
+            modelBuilder.Configurations.Add(new CommodityLimitMap());
+
+
+            /////////////////////////////////////////////////////
 
             // 禁用默认表名复数形式
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();

@@ -207,6 +207,10 @@
     <Compile Include="Migrations\201803160751194_zs4.2.Designer.cs">
       <DependentUpon>201803160751194_zs4.2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201804120659187_zs4.3.cs" />
+    <Compile Include="Migrations\201804120659187_zs4.3.Designer.cs">
+      <DependentUpon>201804120659187_zs4.3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Agent.cs" />
@@ -337,6 +341,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201803160751194_zs4.2.resx">
       <DependentUpon>201803160751194_zs4.2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201804120659187_zs4.3.resx">
+      <DependentUpon>201804120659187_zs4.3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

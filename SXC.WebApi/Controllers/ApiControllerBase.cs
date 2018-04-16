@@ -11,6 +11,6 @@ namespace SXC.WebApi
     public class ApiControllerBase : ApiController
     {
         protected int _cacheabsoluteminutes = ConfigHelper.GetConfigInt("CacheAbsoluteMinutes", 5);
-        protected int _cacheslidingminutes = ConfigHelper.GetConfigInt("CacheSlidingMinutes", 5);
+        protected int _cacheslidingminutes = ConfigHelper.GetConfigInt("CacheSlidingMinutes", 2);
     }
 }

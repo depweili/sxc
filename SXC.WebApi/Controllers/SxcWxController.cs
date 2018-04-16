@@ -175,13 +175,13 @@ namespace SXC.WebApi.Controllers
         /// <returns></returns>
         [Route("api/Promotions")]
         [HttpGet]
-        public IHttpActionResult GetPromotions()
+        public IHttpActionResult GetPromotions(int type=0)
         {
             var res = new ResponseBase();
             try
             {
                 var service = new WxService();
-                var data = service.GetPromotions(0);
+                var data = service.GetPromotions(type);
 
                 res.resData = data;
             }

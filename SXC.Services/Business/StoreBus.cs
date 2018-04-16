@@ -109,5 +109,61 @@ namespace SXC.Services.Business
 
 
         /////////////////
+
+        internal int CheckStock(int p, Commodity c, Guid authid, out string msglimit)
+        {
+            int res = p;
+            msglimit = string.Empty;
+
+            try
+            {
+                var ui = _context.UserIntegrals.Single(t => t.User.AuthID == authid);
+
+                foreach (var i in this._context.CommodityLimits.Where(t => t.CommodityID == c.ID && (t.IsValid ?? true) == true))
+                {
+                    switch (i.Granularity.ToLower())
+                    {
+                        case "day":
+                            if (_context.OrderCommoditys.Where(t => t.CommodityID == c.ID && t.OrderInfo.UserIntegral.ID == ui.ID && t.OrderInfo.CreateTime.Value.Date == DateTime.Now.Date).Sum(t => t.Quantity) >= i.MaxQuantity)
+                            {
+                                res = -1;
+                                msglimit = "已达到日限制量";
+
+                                return res;
+                            }
+                            break;
+                        case "week":
+                            var monday = DateTime.Now.AddDays(1 - Convert.ToInt32(DateTime.Now.DayOfWeek)).Date;
+                            if (_context.OrderCommoditys.Where(t => t.CommodityID == c.ID && t.OrderInfo.UserIntegral.ID == ui.ID && t.OrderInfo.CreateTime.Value.Date >= monday).Sum(t => t.Quantity) >= i.MaxQuantity)
+                            {
+                                res = -1;
+                                msglimit = "已达到周限制量";
+
+                                return res;
+                            }
+                            break;
+                        case "month":
+                            var monthfirstday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                            if (_context.OrderCommoditys.Where(t => t.CommodityID == c.ID && t.OrderInfo.UserIntegral.ID == ui.ID && t.OrderInfo.CreateTime.Value >= monthfirstday).Sum(t => (int?)t.Quantity) >= i.MaxQuantity)
+                            {
+                                res = -1;
+                                msglimit = "已达到月限制量";
+
+                                return res;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+
+            return res;
+        }
     }
 }

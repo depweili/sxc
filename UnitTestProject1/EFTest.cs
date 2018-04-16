@@ -3788,7 +3788,7 @@ SELECT * FROM temp");
             {
                 db.Database.Log = Console.WriteLine;
 
-                var query = db.Users.Where(t => new int[] { 5, 6, 9, 32,12 }.Contains(t.ID));//5,6,9,32
+                var query = db.Users.Where(t => new int[] { 2835 }.Contains(t.ID));//5,6,9,32,12
                 //var query = db.Users.Where(t => new int[] { 32 }.Contains(t.ID)).Select(t => new { t.UserIntegral }).ToList();
 
                 foreach (var user in query)

@@ -43,6 +43,8 @@ namespace SXC.Services.Dto
         public List<CommodityAttrDto> detailAttrs { get; set; }
 
         public int? articleid { get; set; }
+
+        public string msglimit { get; set; }
     }
 
     public class CommodityDto

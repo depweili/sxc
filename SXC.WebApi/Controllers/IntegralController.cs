@@ -156,16 +156,17 @@ namespace SXC.WebApi.Controllers
         /// 获取商品详情
         /// </summary>
         /// <param name="uid"></param>
+        /// <param name="authid"></param>
         /// <returns></returns>
-        [Route("api/Integral/Commodity/{uid}")]
+        [Route("api/Integral/Commodity")]
         [HttpGet]
-        public IHttpActionResult GetCommodity(Guid uid)
+        public IHttpActionResult GetCommodity(Guid uid,Guid authid)
         {
             var res = new ResponseBase();
             try
             {
                 var service = new StoreService();
-                var data = service.GetCommodity(uid);
+                var data = service.GetCommodity(uid, authid);
 
                 res.resData = data;
 

@@ -227,5 +227,27 @@ namespace SXC.Core.Models
         public DateTime CreateTime { get; set; }
     }
 
+    public class CommodityLimit
+    {
+        public int ID { get; set; }
+
+        public string Granularity { get; set; }
+
+        public int CommodityID { get; set; }
+        public virtual Commodity Commodity { get; set; }
+
+        public int MaxQuantity { get; set; }
+
+        public string Memo { get; set; }
+
+        public bool? IsValid { get; set; }
+
+        public DateTime CreateTime { get; set; }
+    }
+
+
+
+
+
 
 }

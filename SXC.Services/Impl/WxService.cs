@@ -652,7 +652,7 @@ namespace SXC.Services.Impl
 
                 //var dbitem = db.Agents.FirstOrDefault(t => t.Code == agentcode).ChildAgents.Select(t => new { t.User.UserProfile.NickName});
 
-                var childlist = db.Agents.FirstOrDefault(t => t.Code == agentcode).ChildAgents.Select(t => new { t.ID, t.Level, t.Type, t.SupAgentBindTime });
+                var childlist = db.Agents.FirstOrDefault(t => t.Code == agentcode).ChildAgents.Select(t => new { t.ID, t.Level, t.Type, t.SupAgentBindTime,u=t.User.UserProfile });
 
                 //var dblist = from a in childlist
                 //             from u in db.UserProfiles
@@ -667,15 +667,27 @@ namespace SXC.Services.Impl
                 //                 level = a.Level
                 //             };
 
+                //var dblist = from a in childlist
+                //             join u in db.UserProfiles
+                //             on a.ID equals u.ID
+                //             select new
+                //             {
+                //                 avatarUrl = u.AvatarUrl,
+                //                 nickname = u.NickName,
+                //                 realname = u.RealName,
+                //                 mobilePhone = u.MobilePhone,
+                //                 supagentbindTime = a.SupAgentBindTime,
+                //                 type = a.Type,
+                //                 level = a.Level
+                //             };
+
                 var dblist = from a in childlist
-                             join u in db.UserProfiles
-                             on a.ID equals u.ID
                              select new
                              {
-                                 avatarUrl = u.AvatarUrl,
-                                 nickname = u.NickName,
-                                 realname = u.RealName,
-                                 mobilePhone = u.MobilePhone,
+                                 avatarUrl = a.u.AvatarUrl,
+                                 nickname = a.u.NickName,
+                                 realname = a.u.RealName,
+                                 mobilePhone = a.u.MobilePhone,
                                  supagentbindTime = a.SupAgentBindTime,
                                  type = a.Type,
                                  level = a.Level

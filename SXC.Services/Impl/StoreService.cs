@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EntityFramework.Extensions;
+using SXC.Core.Data;
 
 namespace SXC.Services.Impl
 {
@@ -45,7 +46,7 @@ namespace SXC.Services.Impl
             }
         }
 
-        public CommodityDetailDto GetCommodity(Guid uid)
+        public CommodityDetailDto GetCommodity(Guid uid, Guid authid)
         {
             using (var db = base.NewDB())
             {
@@ -75,9 +76,18 @@ namespace SXC.Services.Impl
                     articleid = dbitem.ArticleID
                 };
 
+                string msglimit = string.Empty;
+
+                var bus = new StoreBus(db);
+                res.stock = bus.CheckStock(res.stock, dbitem, authid, out msglimit);
+                res.msglimit = msglimit;
+
                 return res;
             }
         }
+
+
+
 
         private List<CommodityAttrDto> GetAttrs(string strattrs)
         {
