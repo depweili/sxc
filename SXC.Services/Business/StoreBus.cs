@@ -124,32 +124,60 @@ namespace SXC.Services.Business
                     switch (i.Granularity.ToLower())
                     {
                         case "day":
-                            if (_context.OrderCommoditys.Where(t => t.CommodityID == c.ID && t.OrderInfo.UserIntegral.ID == ui.ID && t.OrderInfo.CreateTime.Value.Date == DateTime.Now.Date).Sum(t => t.Quantity) >= i.MaxQuantity)
+                            var ygm_d = _context.OrderCommoditys.Where(t => t.CommodityID == c.ID && t.OrderInfo.UserIntegral.ID == ui.ID && t.OrderInfo.CreateTime.Value.Date == DateTime.Now.Date).Sum(t => (int?)t.Quantity).GetValueOrDefault();
+
+                            if (ygm_d >= i.MaxQuantity)
                             {
                                 res = -1;
                                 msglimit = "已达到日限制量";
 
                                 return res;
                             }
+                            else
+                            {
+                                var kgm = i.MaxQuantity - ygm_d;
+                                if (kgm < res)
+                                {
+                                    res = kgm;
+                                }
+                            }
                             break;
                         case "week":
                             var monday = DateTime.Now.AddDays(1 - Convert.ToInt32(DateTime.Now.DayOfWeek)).Date;
-                            if (_context.OrderCommoditys.Where(t => t.CommodityID == c.ID && t.OrderInfo.UserIntegral.ID == ui.ID && t.OrderInfo.CreateTime.Value.Date >= monday).Sum(t => t.Quantity) >= i.MaxQuantity)
+                            var ygm_w = _context.OrderCommoditys.Where(t => t.CommodityID == c.ID && t.OrderInfo.UserIntegral.ID == ui.ID && t.OrderInfo.CreateTime.Value.Date >= monday).Sum(t => (int?)t.Quantity).GetValueOrDefault();
+                            if (ygm_w >= i.MaxQuantity)
                             {
                                 res = -1;
                                 msglimit = "已达到周限制量";
 
                                 return res;
                             }
+                            else
+                            {
+                                var kgm = i.MaxQuantity - ygm_w;
+                                if (kgm < res)
+                                {
+                                    res = kgm;
+                                }
+                            }
                             break;
                         case "month":
                             var monthfirstday = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-                            if (_context.OrderCommoditys.Where(t => t.CommodityID == c.ID && t.OrderInfo.UserIntegral.ID == ui.ID && t.OrderInfo.CreateTime.Value >= monthfirstday).Sum(t => (int?)t.Quantity) >= i.MaxQuantity)
+                            var ygm_m = _context.OrderCommoditys.Where(t => t.CommodityID == c.ID && t.OrderInfo.UserIntegral.ID == ui.ID && t.OrderInfo.CreateTime.Value >= monthfirstday).Sum(t => (int?)t.Quantity).GetValueOrDefault();
+                            if (ygm_m >= i.MaxQuantity)
                             {
                                 res = -1;
                                 msglimit = "已达到月限制量";
 
                                 return res;
+                            }
+                            else
+                            {
+                                var kgm = i.MaxQuantity - ygm_m;
+                                if (kgm < res)
+                                {
+                                    res = kgm;
+                                }
                             }
                             break;
                         default:
